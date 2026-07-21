@@ -8,7 +8,7 @@
 <meta property="og:title" content="Flutter Agent Skills">
 <meta property="og:description" content="General, reusable Flutter engineering skills for AI coding agents. 33 skills, one open standard, works with 70+ agents.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://zakaria.dev/Flutter-Claude-Code-Skills/">
+<meta property="og:url" content="https://zakaria.dev/Flutter-skills/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%8B%3C/text%3E%3C/svg%3E">
 <style>
   :root{
@@ -160,7 +160,7 @@
       <a href="#skills" class="hide-sm">Skills</a>
       <a href="#install" class="hide-sm">Install</a>
       <a href="#how" class="hide-sm">How it works</a>
-      <a href="https://github.com/zakariaf/Flutter-Claude-Code-Skills" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://github.com/zakariaf/Flutter-skills" target="_blank" rel="noopener">GitHub ↗</a>
       <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">🌙</button>
     </nav>
   </div>
@@ -185,8 +185,8 @@
       <div class="install-cmd">
         <div class="code-copy">
           <span class="prompt">$</span>
-          <code id="hero-cmd">npx skills add zakariaf/Flutter-Claude-Code-Skills</code>
-          <button class="icon-btn" data-copy="npx skills add zakariaf/Flutter-Claude-Code-Skills" title="Copy">⧉</button>
+          <code id="hero-cmd">npx skills add zakariaf/Flutter-skills</code>
+          <button class="icon-btn" data-copy="npx skills add zakariaf/Flutter-skills" title="Copy">⧉</button>
         </div>
       </div>
       <p class="agents-line"><b>Works with 70+ agents</b> via the open skills standard — Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf, Cline, OpenCode &amp; more.</p>
@@ -216,20 +216,20 @@
       </div>
       <div class="panel-code">
         <div class="tabpanel active" data-tab="npx"><pre><span class="cmt"># Installs into 70+ agents (Cursor, Codex, Copilot, Cline, …)</span>
-<span class="pr">$</span> npx skills add zakariaf/Flutter-Claude-Code-Skills            <span class="cmt"># all skills</span>
-<span class="pr">$</span> npx skills add zakariaf/Flutter-Claude-Code-Skills --list     <span class="cmt"># browse first</span>
-<span class="pr">$</span> npx skills add zakariaf/Flutter-Claude-Code-Skills --skill flutter-architecture</pre></div>
+<span class="pr">$</span> npx skills add zakariaf/Flutter-skills            <span class="cmt"># all skills</span>
+<span class="pr">$</span> npx skills add zakariaf/Flutter-skills --list     <span class="cmt"># browse first</span>
+<span class="pr">$</span> npx skills add zakariaf/Flutter-skills --skill flutter-architecture</pre></div>
         <div class="tabpanel" data-tab="claude"><pre><span class="cmt"># This repo is a Claude Code plugin marketplace</span>
-<span class="pr">/</span>plugin marketplace add zakariaf/Flutter-Claude-Code-Skills
+<span class="pr">/</span>plugin marketplace add zakariaf/Flutter-skills
 <span class="pr">/</span>plugin install flutter@flutter-skills
 
 <span class="cmt"># Skills then appear as e.g. /flutter:flutter-architecture</span></pre></div>
         <div class="tabpanel" data-tab="copy"><pre><span class="cmt"># Copy the skills into a single project (committed for the whole team)</span>
-<span class="pr">$</span> git clone https://github.com/zakariaf/Flutter-Claude-Code-Skills
+<span class="pr">$</span> git clone https://github.com/zakariaf/Flutter-skills
 <span class="pr">$</span> mkdir -p .claude/skills
-<span class="pr">$</span> cp -R Flutter-Claude-Code-Skills/skills/* .claude/skills/</pre></div>
+<span class="pr">$</span> cp -R Flutter-skills/skills/* .claude/skills/</pre></div>
         <div class="tabpanel" data-tab="global"><pre><span class="cmt"># Make every skill available in every project on your machine</span>
-<span class="pr">$</span> for d in /path/to/Flutter-Claude-Code-Skills/skills/*/; do
+<span class="pr">$</span> for d in /path/to/Flutter-skills/skills/*/; do
     ln -s "$d" "$HOME/.claude/skills/$(basename "$d")"
   done</pre></div>
       </div>
@@ -275,8 +275,8 @@
 <footer>
   <div class="wrap foot-in">
     <span>🦋 Flutter Agent Skills</span>
-    <a href="https://github.com/zakariaf/Flutter-Claude-Code-Skills" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://github.com/zakariaf/Flutter-Claude-Code-Skills/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+    <a href="https://github.com/zakariaf/Flutter-skills" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/zakariaf/Flutter-skills/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
     <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills standard</a>
     <span class="sp">MIT © 2026 Zakaria Fatahi</span>
   </div>
@@ -304,7 +304,7 @@
     tabs.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===t)});
     document.querySelectorAll('#install .tabpanel').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-tab')===t.getAttribute('data-tab'))});});}
   // stats
-  var GH='https://github.com/zakariaf/Flutter-Claude-Code-Skills/blob/main/skills/';
+  var GH='https://github.com/zakariaf/Flutter-skills/blob/main/skills/';
   document.getElementById('s-skills').textContent=SKILLS.length||33;
   document.getElementById('pill-count').textContent=(SKILLS.length||33)+' skills';
   var catSet={};SKILLS.forEach(function(s){catSet[s.category]=1});
