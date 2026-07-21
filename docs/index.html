@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flutter Agent Skills — best-of-breed Flutter skills for AI coding agents</title>
+<meta name="description" content="A best-of-breed library of general, reusable Flutter engineering skills for Claude Code and any AI coding agent — architecture, Riverpod 3.x state, testing, persistence, i18n/RTL, accessibility, navigation, performance, and more.">
+<meta property="og:title" content="Flutter Agent Skills">
+<meta property="og:description" content="General, reusable Flutter engineering skills for AI coding agents. 33 skills, one open standard, works with 70+ agents.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%8B%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0b0d10; --bg-soft:#12151a; --panel:#141922; --panel-2:#1a2029;
+    --border:#232a35; --border-soft:#1c222b;
+    --text:#e7ecf3; --muted:#9aa7b8; --faint:#6b7787;
+    --accent:#4f8cff; --accent-2:#7c5cff; --accent-soft:rgba(79,140,255,.14);
+    --ok:#3ecf8e; --warn:#f0b43c;
+    --radius:16px; --radius-sm:10px; --maxw:1120px;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 30px rgba(0,0,0,.28);
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji";
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f9fc; --bg-soft:#eef2f8; --panel:#ffffff; --panel-2:#f3f6fb;
+    --border:#e2e8f1; --border-soft:#eaeff6;
+    --text:#111826; --muted:#54617a; --faint:#8b97ab;
+    --accent:#2563eb; --accent-2:#7c3aed; --accent-soft:rgba(37,99,235,.10);
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 12px 32px rgba(16,24,40,.08);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .mono{font-family:var(--mono)}
+  /* ---- nav ---- */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(10px);
+    background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--border-soft)}
+  .nav-in{display:flex;align-items:center;gap:18px;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+  .brand .logo{font-size:22px}
+  .nav-links{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .nav-links a{padding:8px 12px;border-radius:9px;color:var(--muted);font-size:14px;font-weight:500}
+  .nav-links a:hover{color:var(--text);background:var(--panel-2)}
+  .icon-btn{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;
+    border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;font-size:16px}
+  .icon-btn:hover{color:var(--text);border-color:var(--accent)}
+  /* ---- hero ---- */
+  .hero{position:relative;padding:76px 0 40px;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-40% -20% auto -20%;height:520px;z-index:-1;
+    background:radial-gradient(60% 60% at 30% 20%,var(--accent-soft),transparent 70%),
+               radial-gradient(50% 50% at 80% 10%,color-mix(in srgb,var(--accent-2) 16%,transparent),transparent 70%)}
+  .hero::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+    background-image:linear-gradient(var(--border-soft) 1px,transparent 1px),linear-gradient(90deg,var(--border-soft) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:radial-gradient(70% 60% at 50% 0%,#000,transparent 75%)}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--border);
+    background:var(--panel);border-radius:999px;font-size:12.5px;color:var(--muted);font-weight:500}
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+  h1.title{font-size:clamp(34px,6vw,60px);line-height:1.04;letter-spacing:-.03em;margin:0 0 18px;font-weight:800}
+  h1.title .grad{background:linear-gradient(100deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{font-size:clamp(16px,2.2vw,20px);color:var(--muted);max-width:640px;margin:0 0 28px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:12px;font-weight:600;
+    font-size:14.5px;cursor:pointer;border:1px solid transparent;transition:.15s}
+  .btn.primary{background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#fff;box-shadow:var(--shadow)}
+  .btn.primary:hover{filter:brightness(1.07);transform:translateY(-1px)}
+  .btn.ghost{background:var(--panel);border-color:var(--border);color:var(--text)}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .install-cmd{margin-top:26px;max-width:560px}
+  .code-copy{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--border);
+    border-radius:12px;padding:13px 15px;font-family:var(--mono);font-size:13.5px;box-shadow:var(--shadow)}
+  .code-copy .prompt{color:var(--accent);font-weight:700}
+  .code-copy code{color:var(--text);overflow:auto;white-space:nowrap}
+  .code-copy button{margin-left:auto;flex:none}
+  .agents-line{margin-top:22px;color:var(--faint);font-size:13.5px}
+  .agents-line b{color:var(--muted);font-weight:600}
+  /* ---- stats ---- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:44px 0 8px}
+  .stat{background:var(--panel);border:1px solid var(--border-soft);border-radius:var(--radius);padding:18px 20px}
+  .stat .n{font-size:26px;font-weight:800;letter-spacing:-.02em}
+  .stat .l{color:var(--muted);font-size:13px;margin-top:2px}
+  /* ---- section ---- */
+  section{padding:56px 0}
+  .sec-head{margin-bottom:26px}
+  .kicker{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  h2.sec-title{font-size:clamp(24px,3.6vw,34px);letter-spacing:-.02em;margin:8px 0 6px;font-weight:800}
+  .sec-sub{color:var(--muted);max-width:640px}
+  /* ---- install tabs ---- */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .tab{padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--panel);
+    color:var(--muted);cursor:pointer;font-size:13.5px;font-weight:600}
+  .tab.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .panel-code{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow)}
+  .panel-code pre{margin:0;font-family:var(--mono);font-size:13.5px;color:var(--text);white-space:pre-wrap;line-height:1.7;overflow:auto}
+  .panel-code .cmt{color:var(--faint)}
+  .panel-code .pr{color:var(--accent);font-weight:700}
+  .tabpanel{display:none}.tabpanel.active{display:block}
+  /* ---- catalog controls ---- */
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+  .search{flex:1;min-width:240px;display:flex;align-items:center;gap:10px;background:var(--panel);
+    border:1px solid var(--border);border-radius:12px;padding:11px 14px}
+  .search input{border:0;outline:0;background:transparent;color:var(--text);font-size:15px;width:100%;font-family:var(--sans)}
+  .search .k{color:var(--faint);font-size:16px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{padding:7px 13px;border-radius:999px;border:1px solid var(--border);background:var(--panel);
+    color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap}
+  .chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .chip .c{opacity:.6;font-weight:500}
+  /* ---- catalog groups + cards ---- */
+  .group{margin-bottom:34px}
+  .group-h{display:flex;align-items:baseline;gap:12px;margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--border-soft)}
+  .group-h h3{margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .group-h .cnt{color:var(--faint);font-size:13px;font-family:var(--mono)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--border-soft);border-radius:var(--radius);
+    padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;transition:.16s;position:relative;overflow:hidden}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+  .card .top{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .card h4{margin:0;font-family:var(--mono);font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .card .desc{color:var(--muted);font-size:13.6px;line-height:1.55;flex:1}
+  .tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.02em;text-transform:uppercase}
+  .tag.core{background:rgba(62,207,142,.14);color:#3ecf8e}
+  .tag.rich{background:var(--accent-soft);color:var(--accent)}
+  .tag.manual{background:rgba(240,180,60,.16);color:#f0b43c}
+  .card .foot{display:flex;align-items:center;gap:8px;margin-top:2px}
+  .card .cat-badge{font-size:11.5px;color:var(--faint);font-weight:600}
+  .card .arrow{margin-left:auto;color:var(--faint);font-size:13px;transition:.15s}
+  .card:hover .arrow{color:var(--accent);transform:translateX(2px)}
+  .empty{text-align:center;color:var(--muted);padding:60px 0;font-size:15px}
+  /* ---- feature grid ---- */
+  .feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .fcard{background:var(--panel);border:1px solid var(--border-soft);border-radius:var(--radius);padding:22px}
+  .fcard .fi{font-size:22px;margin-bottom:10px}
+  .fcard h4{margin:0 0 6px;font-size:16px;font-weight:700}
+  .fcard p{margin:0;color:var(--muted);font-size:14px}
+  /* ---- footer ---- */
+  footer{border-top:1px solid var(--border-soft);padding:40px 0;margin-top:30px;color:var(--muted);font-size:14px}
+  .foot-in{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+  .foot-in a{color:var(--muted)}.foot-in a:hover{color:var(--accent)}
+  .foot-in .sp{margin-left:auto}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--text);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:13.5px;font-weight:600;
+    transition:.2s;pointer-events:none;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}.nav-links a.hide-sm{display:none}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top"><span class="logo">🦋</span> Flutter Agent Skills</a>
+    <nav class="nav-links">
+      <a href="#skills" class="hide-sm">Skills</a>
+      <a href="#install" class="hide-sm">Install</a>
+      <a href="#how" class="hide-sm">How it works</a>
+      <a href="https://github.com/zakariaf/Flutter-Claude-Code-Skills" target="_blank" rel="noopener">GitHub ↗</a>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="badge-row">
+        <span class="pill"><span class="dot"></span> <span id="pill-count">33 skills</span></span>
+        <span class="pill">Agent Skills open standard</span>
+        <span class="pill">Riverpod 3.x · Material 3</span>
+        <span class="pill">MIT</span>
+      </div>
+      <h1 class="title">Production-grade <span class="grad">Flutter skills</span><br>for your AI coding agent.</h1>
+      <p class="lede">A best-of-breed library of general, reusable Flutter engineering playbooks — architecture, state, testing, persistence, i18n, accessibility, navigation, and more. Your agent loads the right one automatically and follows it.</p>
+      <div class="cta">
+        <a class="btn primary" href="#install">Get started</a>
+        <a class="btn ghost" href="#skills">Browse the skills →</a>
+      </div>
+      <div class="install-cmd">
+        <div class="code-copy">
+          <span class="prompt">$</span>
+          <code id="hero-cmd">npx skills add zakariaf/Flutter-Claude-Code-Skills</code>
+          <button class="icon-btn" data-copy="npx skills add zakariaf/Flutter-Claude-Code-Skills" title="Copy">⧉</button>
+        </div>
+      </div>
+      <p class="agents-line"><b>Works with 70+ agents</b> via the open skills standard — Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf, Cline, OpenCode &amp; more.</p>
+
+      <div class="stats">
+        <div class="stat"><div class="n" id="s-skills">33</div><div class="l">general skills</div></div>
+        <div class="stat"><div class="n" id="s-cats">7</div><div class="l">categories</div></div>
+        <div class="stat"><div class="n">70+</div><div class="l">supported agents</div></div>
+        <div class="stat"><div class="n">100%</div><div class="l">design-token-free</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Install</div>
+        <h2 class="sec-title">Add the skills to any project</h2>
+        <p class="sec-sub">Pick the path that fits your agent. The universal installer works everywhere; native integrations are one command each.</p>
+      </div>
+      <div class="tabs" id="install-tabs">
+        <button class="tab active" data-tab="npx">Any agent (npx)</button>
+        <button class="tab" data-tab="claude">Claude Code</button>
+        <button class="tab" data-tab="copy">Copy into a project</button>
+        <button class="tab" data-tab="global">Personal global</button>
+      </div>
+      <div class="panel-code">
+        <div class="tabpanel active" data-tab="npx"><pre><span class="cmt"># Installs into 70+ agents (Cursor, Codex, Copilot, Cline, …)</span>
+<span class="pr">$</span> npx skills add zakariaf/Flutter-Claude-Code-Skills            <span class="cmt"># all skills</span>
+<span class="pr">$</span> npx skills add zakariaf/Flutter-Claude-Code-Skills --list     <span class="cmt"># browse first</span>
+<span class="pr">$</span> npx skills add zakariaf/Flutter-Claude-Code-Skills --skill flutter-architecture</pre></div>
+        <div class="tabpanel" data-tab="claude"><pre><span class="cmt"># This repo is a Claude Code plugin marketplace</span>
+<span class="pr">/</span>plugin marketplace add zakariaf/Flutter-Claude-Code-Skills
+<span class="pr">/</span>plugin install flutter@flutter-skills
+
+<span class="cmt"># Skills then appear as e.g. /flutter:flutter-architecture</span></pre></div>
+        <div class="tabpanel" data-tab="copy"><pre><span class="cmt"># Copy the skills into a single project (committed for the whole team)</span>
+<span class="pr">$</span> git clone https://github.com/zakariaf/Flutter-Claude-Code-Skills
+<span class="pr">$</span> mkdir -p .claude/skills
+<span class="pr">$</span> cp -R Flutter-Claude-Code-Skills/skills/* .claude/skills/</pre></div>
+        <div class="tabpanel" data-tab="global"><pre><span class="cmt"># Make every skill available in every project on your machine</span>
+<span class="pr">$</span> for d in /path/to/Flutter-Claude-Code-Skills/skills/*/; do
+    ln -s "$d" "$HOME/.claude/skills/$(basename "$d")"
+  done</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOG -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Catalog</div>
+        <h2 class="sec-title">The skills</h2>
+        <p class="sec-sub">Each skill auto-loads when your task matches its description, then enforces its rules. <span class="tag rich" style="vertical-align:middle">rich</span> skills bundle references, examples &amp; runnable checks.</p>
+      </div>
+      <div class="controls">
+        <label class="search"><span class="k">⌕</span><input id="q" type="search" placeholder="Search skills — architecture, testing, riverpod, drift…" autocomplete="off"></label>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div id="catalog" style="margin-top:22px"></div>
+      <div class="empty" id="empty" style="display:none">No skills match “<span id="empty-q"></span>”.</div>
+    </div>
+  </section>
+
+  <!-- HOW / WHY -->
+  <section id="how" style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Why it works</div>
+        <h2 class="sec-title">Opinionated, correct, and out of your way</h2>
+      </div>
+      <div class="feat">
+        <div class="fcard"><div class="fi">🎯</div><h4>Auto-loading</h4><p>A rich <code>description</code> is the trigger — the agent loads a skill only when the task matches, so context stays lean.</p></div>
+        <div class="fcard"><div class="fi">📚</div><h4>Progressive disclosure</h4><p>A lean <code>SKILL.md</code> points to <code>references/</code>, <code>examples/</code> &amp; <code>scripts/</code> that load on demand.</p></div>
+        <div class="fcard"><div class="fi">🧭</div><h4>One canonical stack</h4><p>Riverpod 3.x, go_router, Drift, Material 3 — reconciled to a single vocabulary so 33 skills never contradict each other.</p></div>
+        <div class="fcard"><div class="fi">🎨</div><h4>Structure, not aesthetics</h4><p>Teaches how components, themes &amp; layouts are <em>structured</em> — never “the colour must be #…”. Drop them into any design.</p></div>
+        <div class="fcard"><div class="fi">🔌</div><h4>Cross-agent</h4><p>Built on the Agent Skills open standard — the same files work in Claude Code, Cursor, Codex, Copilot and 70+ more.</p></div>
+        <div class="fcard"><div class="fi">✅</div><h4>Adversarially reviewed</h4><p>Every skill was reviewed for API correctness (Riverpod 3.x, Drift, WCAG) and scrubbed of app-domain &amp; design-token specifics.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>🦋 Flutter Agent Skills</span>
+    <a href="https://github.com/zakariaf/Flutter-Claude-Code-Skills" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/zakariaf/Flutter-Claude-Code-Skills/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+    <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills standard</a>
+    <span class="sp">MIT © 2026 Zakaria Fatahi</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Copied!</div>
+<script src="skills-data.js"></script>
+<script>
+(function(){
+  var SKILLS = (window.SKILLS||[]);
+  var CATS = (window.CATEGORIES||[]);
+  // theme
+  var root=document.documentElement, tb=document.getElementById('themeBtn');
+  function setTheme(t){root.setAttribute('data-theme',t);tb.textContent=(t==='dark'?'☀️':'🌙');try{localStorage.setItem('fas-theme',t)}catch(e){}}
+  try{var saved=localStorage.getItem('fas-theme');if(saved)setTheme(saved);else if(window.matchMedia&&matchMedia('(prefers-color-scheme:light)').matches)setTheme('light');}catch(e){}
+  tb.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+  // toast + copy
+  var toast=document.getElementById('toast'),tT;
+  function showToast(m){toast.textContent=m||'Copied!';toast.classList.add('show');clearTimeout(tT);tT=setTimeout(function(){toast.classList.remove('show')},1400)}
+  function copy(text){navigator.clipboard&&navigator.clipboard.writeText(text).then(function(){showToast('Copied to clipboard')},function(){showToast('Copy failed')})}
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(b){copy(b.getAttribute('data-copy'))}});
+  // install tabs
+  var tabs=document.getElementById('install-tabs');
+  if(tabs){tabs.addEventListener('click',function(e){var t=e.target.closest('.tab');if(!t)return;
+    tabs.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===t)});
+    document.querySelectorAll('#install .tabpanel').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-tab')===t.getAttribute('data-tab'))});});}
+  // stats
+  var GH='https://github.com/zakariaf/Flutter-Claude-Code-Skills/blob/main/skills/';
+  document.getElementById('s-skills').textContent=SKILLS.length||33;
+  document.getElementById('pill-count').textContent=(SKILLS.length||33)+' skills';
+  var catSet={};SKILLS.forEach(function(s){catSet[s.category]=1});
+  document.getElementById('s-cats').textContent=(CATS.length||Object.keys(catSet).length||7);
+  // chips
+  var active='all',q='';
+  var chips=document.getElementById('chips');
+  function renderChips(){
+    var counts={};SKILLS.forEach(function(s){counts[s.category]=(counts[s.category]||0)+1});
+    var html='<button class="chip'+(active==='all'?' active':'')+'" data-cat="all">All <span class="c">'+SKILLS.length+'</span></button>';
+    CATS.forEach(function(c){html+='<button class="chip'+(active===c.key?' active':'')+'" data-cat="'+c.key+'">'+c.label+' <span class="c">'+(counts[c.key]||0)+'</span></button>'});
+    chips.innerHTML=html;
+  }
+  chips.addEventListener('click',function(e){var c=e.target.closest('.chip');if(!c)return;active=c.getAttribute('data-cat');renderChips();render()});
+  // search
+  document.getElementById('q').addEventListener('input',function(e){q=e.target.value.toLowerCase().trim();render()});
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]})}
+  function match(s){
+    if(active!=='all'&&s.category!==active)return false;
+    if(!q)return true;
+    return (s.name+' '+s.description+' '+s.categoryLabel+' '+(s.tags||[]).join(' ')).toLowerCase().indexOf(q)>=0;
+  }
+  var catalog=document.getElementById('catalog'),empty=document.getElementById('empty');
+  function card(s){
+    var tags='';
+    if(s.priority==='core')tags+='<span class="tag core">core</span>';
+    if(s.rich)tags+='<span class="tag rich">rich</span>';
+    if(s.manual)tags+='<span class="tag manual">manual</span>';
+    return '<a class="card" href="'+GH+esc(s.name)+'/SKILL.md" target="_blank" rel="noopener">'+
+      '<div class="top"><h4>'+esc(s.name)+'</h4>'+tags+'</div>'+
+      '<div class="desc">'+esc(s.description)+'</div>'+
+      '<div class="foot"><span class="cat-badge">'+esc(s.categoryLabel)+'</span><span class="arrow">SKILL.md →</span></div></a>';
+  }
+  function render(){
+    var shown=SKILLS.filter(match);
+    if(!shown.length){catalog.innerHTML='';empty.style.display='';document.getElementById('empty-q').textContent=q;return}
+    empty.style.display='none';
+    var html='';
+    var order=CATS.length?CATS.map(function(c){return c.key}):Object.keys({});
+    if(active!=='all'){
+      html+='<div class="grid">'+shown.map(card).join('')+'</div>';
+    }else{
+      order.forEach(function(k){
+        var g=shown.filter(function(s){return s.category===k});if(!g.length)return;
+        var lab=(CATS.find(function(c){return c.key===k})||{}).label||k;
+        html+='<div class="group"><div class="group-h"><h3>'+esc(lab)+'</h3><span class="cnt">'+g.length+'</span></div><div class="grid">'+g.map(card).join('')+'</div></div>';
+      });
+    }
+    catalog.innerHTML=html;
+  }
+  renderChips();render();
+})();
+</script>
+</body>
+</html>

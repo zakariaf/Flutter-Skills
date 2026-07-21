@@ -1,0 +1,12 @@
+# Demonstrates the .gitattributes needed ONLY under the "commit generated code"
+# strategy: mark machine output as generated so GitHub collapses it in diffs and
+# excludes it from language stats. Rename to `.gitattributes` at the repo root.
+#
+# If you instead GITIGNORE generated code, you do not need this file at all —
+# list the same suffixes in .gitignore instead. Pick one strategy (see
+# references/commit-vs-gitignore.md) and wire its CI gate.
+
+*.g.dart        linguist-generated=true
+*.freezed.dart  linguist-generated=true
+*.drift.dart    linguist-generated=true
+*.mocks.dart    linguist-generated=true

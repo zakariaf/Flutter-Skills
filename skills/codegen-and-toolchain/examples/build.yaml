@@ -1,0 +1,39 @@
+# Demonstrates a correctly scoped per-package build.yaml: each builder is fenced
+# to the directory that OWNS its annotations, so editing one model does not
+# regenerate the whole tree. Copy and adjust the globs for your package layout.
+#
+# These globs use the single-app FEATURE-FIRST layout (lib/data, lib/features,
+# lib/core) owned by project-structure-and-packages — the app package does NOT
+# use lib/src/. Inside a pub-workspace PACKAGE, swap the roots for lib/src/**.
+targets:
+  $default:
+    builders:
+      # Drift database + DAOs live under lib/data (the shared data layer).
+      drift_dev:
+        generate_for:
+          - "lib/data/**.dart"
+        options:
+          # Example builder option; choose canonical storage explicitly.
+          store_date_time_values_as_text: true
+
+      # Only *_dto.dart files carry @JsonSerializable (backup/export/wire DTOs).
+      json_serializable:
+        generate_for:
+          - "lib/data/**/*_dto.dart"
+
+      # freezed immutable value/domain + UI-state models. Row -> domain mapping
+      # happens at the repository boundary; never leak generated DB row classes
+      # to the UI. freezed is the default for non-trivial value types
+      # (see dart3-idioms-and-coding-standards).
+      freezed:
+        generate_for:
+          - "lib/**/*_model.dart"
+          - "lib/**/*_state.dart"
+          - "lib/core/**.dart"
+
+      # @riverpod Notifiers/providers live in feature dirs. OPTIONAL: manual
+      # providers are the default authoring style; only scope this builder if the
+      # team opts into riverpod codegen (see state-management-riverpod).
+      riverpod_generator:
+        generate_for:
+          - "lib/features/**/*.dart"

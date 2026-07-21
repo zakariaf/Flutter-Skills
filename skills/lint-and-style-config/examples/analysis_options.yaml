@@ -1,0 +1,120 @@
+# =============================================================================
+# analysis_options.yaml — ready-to-copy strict baseline (Flutter 3.2x / Dart 3.x)
+#
+# Copy this to the package root. It builds on very_good_analysis (VGA) and
+# promotes a fixed set of SILENCE-producing bug classes from info -> error.
+# The rationale for every promotion lives in references/rule-catalog.md.
+#
+# VERIFY BEFORE TRUSTING IT (do this in the SAME commit you bump the SDK/VGA):
+#   1. The pinned include filename below must EXIST in the resolved package,
+#      or you get a single `include_file_not_found` warning and analysis runs
+#      with ZERO rules — a green build that checks nothing. Check with:
+#        ls ~/.pub-cache/hosted/pub.dev/very_good_analysis-*/lib/
+#   2. Confirm a known violation still errors — do not trust a green analyzer.
+# =============================================================================
+
+# Pin the VERSION-NUMBERED file, never the bare analysis_options.yaml. A
+# `dart pub upgrade` must never silently change what counts as an error.
+# Replace 10.3.0 with the very_good_analysis version in your pubspec.yaml.
+include: package:very_good_analysis/analysis_options.10.3.0.yaml
+
+# NOTE: no `language:` block. VGA already sets strict-casts, strict-inference,
+# and strict-raw-types. Restating them here is redundant config that drifts and
+# then contradicts. If any of the three must be relaxed, that is a design
+# problem at a boundary (dynamic platform-channel payloads), not a config knob.
+
+analyzer:
+  exclude:
+    # Generated code: not hand-owned, regenerated on every build. Linting it
+    # produces findings nobody can act on. MIRROR this exact list in coverage
+    # filtering (see references/config-mechanics.md) or the number lies upward.
+    - "**/*.g.dart"          # json_serializable, drift, riverpod_generator
+    - "**/*.freezed.dart"    # freezed
+    - "**/*.drift.dart"      # drift
+    - "**/*.gen.dart"        # asset/other generators
+    - "**/generated_plugin_registrant.dart"
+    # Drift's exported schema snapshots are historical migration-test baselines.
+    # A reformat or autofix here corrupts the baseline. Never edit old snapshots.
+    - "test/drift/generated/**"
+
+  errors:
+    # --- Dropped Futures: an operation that silently never happens ----------
+    unawaited_futures: error       # unawaited Future inside an async body
+    discarded_futures: error       # Future-returning call in a SYNC body
+
+    # --- Swallowed failure --------------------------------------------------
+    empty_catches: error
+    avoid_catches_without_on_clauses: error   # catch narrowly, by type
+    only_throw_errors: error
+    throw_in_finally: error        # silently replaces the real exception
+
+    # --- Async + UI: the dead-context-after-await hazard --------------------
+    use_build_context_synchronously: error
+
+    # --- Resource leaks (VGA ships close_sinks at `ignore`; re-promoted) -----
+    cancel_subscriptions: error
+    close_sinks: error
+
+    # --- Type holes at dynamic boundaries -----------------------------------
+    avoid_dynamic_calls: error
+    always_declare_return_types: error
+    cast_nullable_to_non_nullable: error
+
+    # --- Exhaustiveness (enum/static-const case only; sealed is a COMPILE
+    #     error, no lint involved — see references/config-mechanics.md) -------
+    exhaustive_cases: error
+
+    # --- Shipping hygiene ---------------------------------------------------
+    avoid_print: error             # route diagnostics through a logger/report
+    avoid_slow_async_io: error
+
+    # --- Public-API docs: error to match dartdoc-conventions. An app with NO
+    #     external consumers may downgrade to `ignore` and document only the
+    #     seams (repositories, services, migration steps) instead.
+    public_member_api_docs: error
+    dangling_library_doc_comments: error
+
+    # --- Deliberately NOT errors -------------------------------------------
+    deprecated_member_use: warning              # never block a hotfix on churn
+    deprecated_member_use_from_same_package: warning
+    invalid_annotation_target: ignore           # freezed/json_serializable noise
+    lines_longer_than_80_chars: ignore          # fires only on unsplittable
+                                                # strings/URLs -> pure noise
+
+# NO `linter: rules:` block by default. VGA already enables everything promoted
+# above (prefer_const_*, discarded_futures, cancel_subscriptions,
+# only_throw_errors, avoid_slow_async_io, exhaustive_cases). `analyzer: errors:`
+# only RE-RANKS diagnostics VGA already produces — it cannot enable an off rule.
+# To enable a rule VGA does NOT ship, add it here in MAP-consistent form; never
+# mix `- rule` list items with `rule: false` map entries (that is a parse error,
+# which silently disables the analyzer):
+#
+# linter:
+#   rules:
+#     some_rule_vga_omits: true
+
+# --- Riverpod plugin (first-party analysis_server_plugin; Dart 3.10+) --------
+# Reports missing_provider_scope on a plain `flutter analyze` — no custom_lint
+# dependency, no second pass. Never add custom_lint (legacy plugin system,
+# deprecation-bound). With a pub version the `version:` key is MANDATORY.
+plugins:
+  riverpod_lint:
+    version: ^3.1.3
+    diagnostics:
+      # Non-generator rules — fire in any Riverpod project.
+      missing_provider_scope: true
+      avoid_ref_inside_state_dispose: true
+      # riverpod_generator-only rules — they never fire without the generator,
+      # so leave them off unless you use riverpod_generator (`@riverpod`).
+      avoid_build_context_in_providers: false
+      provider_dependencies: false
+      functional_ref: false
+      notifier_extends: false
+      notifier_build: false
+
+# --- Formatter --------------------------------------------------------------
+# Tall style is selected by the language version in pubspec.yaml, not here.
+# `dart format` is the sole whitespace authority; these keys only tune it.
+formatter:
+  trailing_commas: preserve      # a trailing comma forces a vertical split ->
+                                 # one-arg-per-line, minimal widget-tree diffs

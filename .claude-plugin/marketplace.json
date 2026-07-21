@@ -1,0 +1,16 @@
+{
+  "name": "flutter-skills",
+  "owner": {
+    "name": "Zakaria Fatahi"
+  },
+  "metadata": {
+    "description": "A general-purpose Flutter engineering skill library for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "flutter",
+      "source": "./",
+      "description": "Best-of-breed general Flutter engineering skills — architecture, Riverpod 3.x state, testing, persistence, i18n/RTL, accessibility, performance, plus codegen/CI/migration runbooks — usable in any Flutter app."
+    }
+  ]
+}
