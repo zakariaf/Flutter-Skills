@@ -6,7 +6,7 @@
 
 Architecture · Riverpod 3.x state · testing · persistence · i18n/RTL · accessibility · navigation · performance — and the codegen/CI/migration runbooks that keep them honest.
 
-[**Browse the catalog →**](https://zakaria.dev/Flutter-skills/) · [Agent Skills standard](https://agentskills.io) · [Contributing](CONTRIBUTING.md)
+[**Browse the catalog →**](https://zakaria.dev/Flutter-Skills/) · [Agent Skills standard](https://agentskills.io) · [Contributing](CONTRIBUTING.md)
 
 `33 skills` · `Riverpod 3.x` · `Material 3` · `works with 70+ agents` · `MIT`
 
@@ -32,9 +32,9 @@ general foundation, not any one app's look or domain.
 
 ```bash
 # Any agent (installs into 70+ tools via the open skills CLI)
-npx skills add zakariaf/Flutter-skills            # all skills
-npx skills add zakariaf/Flutter-skills --list     # browse first
-npx skills add zakariaf/Flutter-skills --skill flutter-architecture
+npx skills add zakariaf/Flutter-Skills            # all skills
+npx skills add zakariaf/Flutter-Skills --list     # browse first
+npx skills add zakariaf/Flutter-Skills --skill flutter-architecture
 ```
 
 Prefer a native integration? See [How to use these skills](#how-to-use-these-skills) below.
@@ -122,7 +122,7 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 | `run-migration` *(manual-only)* | The forward-only Drift/SQLite migration ritual: mandatory pre-migration snapshot, bump by one, append-only steps, tests over every from→to path + a forced-throw restore. |
 
 > A full, searchable catalog with descriptions and filters lives on the
-> **[website](https://zakaria.dev/Flutter-skills/)**.
+> **[website](https://zakaria.dev/Flutter-Skills/)**.
 
 ## How to use these skills
 
@@ -131,26 +131,26 @@ can also run one explicitly with `/<skill-name>` (or, installed as a plugin, `/f
 
 ### Any agent — the universal installer
 ```bash
-npx skills add zakariaf/Flutter-skills
+npx skills add zakariaf/Flutter-Skills
 ```
 The open [skills CLI](https://github.com/vercel-labs/skills) places the skills where your agent
 expects them (Cursor, Codex, Copilot, Cline, Windsurf, Gemini CLI, …).
 
 ### Claude Code — plugin marketplace
 ```
-/plugin marketplace add zakariaf/Flutter-skills
+/plugin marketplace add zakariaf/Flutter-Skills
 /plugin install flutter@flutter-skills
 ```
 
 ### Copy into a single project
 ```bash
-git clone https://github.com/zakariaf/Flutter-skills
-mkdir -p .claude/skills && cp -R Flutter-skills/skills/* .claude/skills/
+git clone https://github.com/zakariaf/Flutter-Skills
+mkdir -p .claude/skills && cp -R Flutter-Skills/skills/* .claude/skills/
 ```
 
 ### Personal-global (every project on your machine)
 ```bash
-for d in /path/to/Flutter-skills/skills/*/; do
+for d in /path/to/Flutter-Skills/skills/*/; do
   ln -s "$d" "$HOME/.claude/skills/$(basename "$d")"
 done
 ```
