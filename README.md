@@ -6,7 +6,7 @@
 
 Architecture · Riverpod 3.x state · testing · persistence · i18n/RTL · accessibility · navigation · performance — and the codegen/CI/migration runbooks that keep them honest.
 
-[**Browse the catalog →**](https://zakariaf.github.io/Flutter-Claude-Code-Skills/) · [Agent Skills standard](https://agentskills.io) · [Contributing](CONTRIBUTING.md)
+[**Browse the catalog →**](https://zakaria.dev/Flutter-Claude-Code-Skills/) · [Agent Skills standard](https://agentskills.io) · [Contributing](CONTRIBUTING.md)
 
 `33 skills` · `Riverpod 3.x` · `Material 3` · `works with 70+ agents` · `MIT`
 
@@ -122,7 +122,7 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 | `run-migration` *(manual-only)* | The forward-only Drift/SQLite migration ritual: mandatory pre-migration snapshot, bump by one, append-only steps, tests over every from→to path + a forced-throw restore. |
 
 > A full, searchable catalog with descriptions and filters lives on the
-> **[website](https://zakariaf.github.io/Flutter-Claude-Code-Skills/)**.
+> **[website](https://zakaria.dev/Flutter-Claude-Code-Skills/)**.
 
 ## How to use these skills
 
