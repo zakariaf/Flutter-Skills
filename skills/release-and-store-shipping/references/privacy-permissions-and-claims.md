@@ -75,6 +75,10 @@ recur:
 - **"Developer's advertising or marketing" usually does not** — an SDK lists it because the network
   supports it across all publishers, which is not a statement about your app. Revisit the day you
   ship cross-promotion.
+- **"Product personalization" only applies if content actually differs per user** — content that is
+  identical for everyone is not personalized, however dynamic it is.
+- **"Collect" means transmitted off the device.** Data that never leaves local storage is not
+  collected, and payment details handled entirely by the store are not collected by you.
 
 ### `NSPrivacyTracking` and `NSPrivacyTrackingDomains` must agree — ITMS-91064
 
