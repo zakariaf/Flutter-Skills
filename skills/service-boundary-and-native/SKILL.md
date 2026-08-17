@@ -183,6 +183,7 @@ Every write path that changes a mirrored value republishes as part of the write,
 - See `testing-strategy` for fakes-over-mocks and the acceptance-gate posture.
 - See `value-objects-money-and-units` for the injected `Clock` (`package:clock`) and canonical value types these signatures name.
 - See `naming-conventions` for the `Service` (capability interface you define) vs `Gateway` (wrapper over a specific plugin/SDK or `MethodChannel`) suffix rule.
+- See `data-export-and-restore` for the share/file-picker Gateway and its fake, and `release-and-store-shipping` for the permissions and store declarations each new plugin brings with it.
 
 ## Provider / ChangeNotifier appendix
 

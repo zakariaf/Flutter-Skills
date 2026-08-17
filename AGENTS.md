@@ -34,10 +34,12 @@ The **`description`** in each skill's YAML frontmatter says *when* it applies. S
 | Adding a feature / screen | `scaffold-feature-module`, then the state/widget/nav skills |
 | Managing state or dependency injection | `state-management-riverpod` |
 | Building or refactoring UI | `widget-composition`, `adaptive-layout`, `design-system-structure` |
+| Loading / empty / error states, snackbars, dialogs, Undo | `ui-states-and-feedback` |
 | Wiring navigation / routes / deep links | `navigation-and-routing` |
 | Building a form or handling input | `forms-and-input` |
 | Handling errors / async | `error-handling-typed-results`, `async-safety` |
 | Storing data locally | `persistence-drift`, `value-objects-money-and-units` |
+| Exporting, backing up, sharing, or restoring user data | `data-export-and-restore` |
 | Wiring a side effect or native channel | `service-boundary-and-native` |
 | Localizing / RTL | `i18n-rtl-l10n` |
 | Accessibility | `accessibility-as-code` |
@@ -46,7 +48,9 @@ The **`description`** in each skill's YAML frontmatter says *when* it applies. S
 | Naming / Dart idioms / docs / lint | `naming-conventions`, `dart3-idioms-and-coding-standards`, `dartdoc-conventions`, `lint-and-style-config` |
 | Codegen / CI / dependencies | `codegen-and-toolchain`, `run-codegen`, `ci-pipeline-and-gates`, `dependency-hygiene` |
 | Applying a schema migration | `run-migration` |
+| Re-baselining golden images | `run-goldens-rebaseline` |
 | End-of-build design/QA review | `design-review-workflow` |
+| Cutting a release, signing, store declarations, rollout | `release-and-store-shipping` |
 
 ## The canonical stack these skills assume
 

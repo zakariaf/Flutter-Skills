@@ -34,7 +34,7 @@ Examples must use **neutral generic domains** (`Note`, `Task`, `Product`, `Accou
 
 ## Canonical stack (keep every skill consistent with these)
 
-New and edited skills must agree with the decisions the existing 33 already follow:
+New and edited skills must agree with the decisions the existing 37 already follow:
 
 - **Layout:** feature-first — `lib/features/<feature>/presentation/` (dumb View + `<feature>_notifier.dart`)
   over shared `lib/core/` (pure), `lib/data/`, `lib/services/`, `lib/routing/`, `lib/theme/`, `lib/l10n/`.

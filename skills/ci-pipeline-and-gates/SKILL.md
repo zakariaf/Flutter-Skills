@@ -190,6 +190,8 @@ Do not present any of this as required for a small app — it is overhead a sing
 - `codegen-and-toolchain` — SDK pinning, per-package `build.yaml`, and analyzer/coverage excludes referenced by the gates.
 - `dependency-hygiene` — the committed lockfile and version-pinned lint include the gates assume.
 - `design-review-workflow` — the once-per-app manual QA sweep that covers what CI cannot prove.
+- `run-goldens-rebaseline` — the local, human-reviewed blessing ritual CI must never perform.
+- `release-and-store-shipping` — what happens after the gates are green: the signed artifact, archived symbols, store declarations, and staged rollout.
 
 ## References
 

@@ -2,7 +2,7 @@
   "name": "Flutter Agent Skills",
   "repo": "zakariaf/Flutter-Skills",
   "standard": "https://agentskills.io",
-  "count": 33,
+  "count": 37,
   "categories": [
     {
       "key": "core-flutter",
@@ -135,6 +135,16 @@
       "path": "skills/local-notifications-scheduler"
     },
     {
+      "name": "ui-states-and-feedback",
+      "description": "Enforces the non-happy paths every screen owes the user — loading/empty/error/content resolved in ONE switch over an AsyncValue or sealed view state, never an isLoading+error+data bool triple; a delayed skeleton shaped like the result instead of a spinner that flashes; a refresh that keeps stale content on screen; \"nothing yet\" distinguished from \"nothing matches this filter\", each with its own action; error text from a typed Failure code (never e.toString()) plus a retry that invalidates the provider; the surface ladder inline, snackbar, banner, dialog, with a modal earned only by a decision that must resolve now; soft-delete + Undo over a confirmation; showDialog's null dismissal handled as its own outcome; ScaffoldMessenger captured before an await; and announcements for eye-only changes. Use when writing loading, empty, error, or offline UI, calling AsyncValue.when, showDialog, showModalBottomSheet, showSnackBar or showMaterialBanner, or adding a confirmation, Undo, or retry.",
+      "category": "core-flutter",
+      "categoryLabel": "Core Flutter & Dart",
+      "priority": "high",
+      "rich": true,
+      "manual": false,
+      "path": "skills/ui-states-and-feedback"
+    },
+    {
       "name": "error-handling-typed-results",
       "description": "Enforces a typed-error spine — a hand-rolled sealed Result<T,F> plus one per-boundary sealed Failure carrying a stable code and typed params (never a localized string), returned instead of thrown; recoverable failures are values, only bugs throw. Convert-at-boundary catches narrowly with an on-clause and logs the original error+stack BEFORE returning a typed Failure; call sites switch exhaustively with no default:; the taxonomy of what the global error net (FlutterError.onError + PlatformDispatcher.onError, installed by app-startup-and-bootstrap) routes into, plus Isolate.run re-wrapping; mechanism selection (Error vs assert vs Exception vs sealed outcome) and @useResult; and a never-lose-data layer (one-transaction-per-mutation, debounced autosave drafts, optimistic soft-delete/Undo). Use when writing result.dart/failures.dart, a try/catch or sealed-switch default:, wiring bootstrap handlers, a repository/service/DAO boundary, or transactions, drafts, or soft-delete/Undo.",
       "category": "architecture",
@@ -233,6 +243,16 @@
       "rich": true,
       "manual": false,
       "path": "skills/value-objects-money-and-units"
+    },
+    {
+      "name": "data-export-and-restore",
+      "description": "Enforces user-facing data portability in an offline-first app — backup/restore (exact, machine round-trippable) kept strictly separate from export/report (human, lossy, never a restore source); a versioned envelope carrying formatVersion, schemaVersion, appVersion, exportedAtUtc and a payload checksum so a restore refuses a file from a newer app instead of corrupting the database; restore as an all-or-nothing import into a staging database swapped in only after validation; canonical values in machine formats (integer minor units, SI integers, ISO-8601 UTC, stable ids) and never localized numerals; RFC 4180 CSV quoting plus the =/+/-/@ formula-injection escape; streaming writes published by atomic rename; the share sheet behind an injected Gateway; and an export→import→export round-trip test on a hostile fixture. Use when adding or changing export, backup, import, restore, share, or CSV/JSON/PDF output, writing an import validator or merge-vs-replace policy, or handling a picked file.",
+      "category": "data",
+      "categoryLabel": "Data",
+      "priority": "medium",
+      "rich": true,
+      "manual": false,
+      "path": "skills/data-export-and-restore"
     },
     {
       "name": "testing-strategy",
@@ -363,6 +383,26 @@
       "rich": false,
       "manual": true,
       "path": "skills/run-codegen"
+    },
+    {
+      "name": "release-and-store-shipping",
+      "description": "Enforces the path from a green CI run to a shipped build — pubspec `version: x.y.z+N` as the single source of versionName/versionCode (monotonic, never reused), the exact release artifact verified on real hardware, signing and store API keys that never enter the repo, `--obfuscate --split-debug-info` with the symbol directory archived per build or that release's crash reports are permanently unreadable, a permission set audited from the MERGED manifest and asserted whole, store privacy declarations (Play Data Safety, nutrition labels, `PrivacyInfo.xcprivacy`) provable in the repo, size and cold-start budgets, and a staged rollout with a halt plan. Use when cutting or tagging a release, editing `android/app/build.gradle(.kts)`, `key.properties`, `AndroidManifest.xml`, `Info.plist`, `ExportOptions.plist` or `PrivacyInfo.xcprivacy`, bumping a version, uploading to Play or TestFlight, writing store-listing or privacy copy, symbolizing a crash, or chasing app size or startup time.",
+      "category": "workflow-tooling",
+      "categoryLabel": "Workflows & tooling",
+      "priority": "high",
+      "rich": true,
+      "manual": false,
+      "path": "skills/release-and-store-shipping"
+    },
+    {
+      "name": "run-goldens-rebaseline",
+      "description": "Runs the golden re-baselining ritual — the one sanctioned way committed reference images are overwritten. Enforces the order: land and green the non-golden geometry, contrast and a11y tests FIRST, re-baseline only in the pinned blessing environment that produced the committed images, with loadAppFonts() so nothing renders in Ahem, via `flutter test --update-goldens --tags golden` (never in CI, never to make a red pipeline green), then inspect every changed PNG by eye, delete the orphans left by renamed or removed tests, land the images as their own commit naming why they moved, and prove it by re-running the suite WITHOUT the flag. Manual, side-effecting workflow. Use when a deliberate visual change breaks matchesGoldenFile, when adding or renaming a golden test, or when someone reaches for --update-goldens.",
+      "category": "workflow-tooling",
+      "categoryLabel": "Workflows & tooling",
+      "priority": "medium",
+      "rich": false,
+      "manual": true,
+      "path": "skills/run-goldens-rebaseline"
     }
   ]
 }

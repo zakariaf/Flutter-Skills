@@ -121,6 +121,8 @@ fi
 - See `widget-golden-and-a11y-testing` for the automated overflow/golden/RTL matrix that this manual pass complements, not replaces.
 - See `run-migration` for the migration ritual the data-safety rehearsal exercises.
 - See `ci-pipeline-and-gates` for where the greppable gate and the green-before-review precondition live.
+- See `release-and-store-shipping` for the release this pass's dated sign-off gates, and `run-goldens-rebaseline` for re-baselining the goldens an accepted visual FIX moved.
+- See `ui-states-and-feedback` for the empty/error/loading states the sweep shoots as their own matrix cells.
 
 ## References
 

@@ -211,6 +211,7 @@ Never open the DB in a widget; never expose a DAO through a provider. See `state
 - `flutter-architecture` — the downward-only DAG and single-write-path layering this data layer sits at the bottom of.
 - `codegen-and-toolchain` / `run-codegen` — running `build_runner` for Drift's generated code.
 - `service-boundary-and-native` — wiring the database/repository as injectable providers overridden at the composition root.
+- `data-export-and-restore` — the portable, user-facing end of this store: the versioned backup envelope, staging-then-swap restore, and CSV/PDF export.
 
 ## References
 

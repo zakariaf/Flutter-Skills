@@ -38,6 +38,7 @@ Assumes a **single-package Flutter app** by default. Monorepo / pub-workspace gu
 | Building or refactoring UI, writing `build()`, layout/insets | `widget-composition` |
 | Configuring the app router, redirects/auth guards, deep links, nav shells, transitions, PopScope, 404 | `navigation-and-routing` |
 | Building a `Form`, sync/async field validation, focus traversal, keyboard actions, input formatters | `forms-and-input` |
+| Rendering loading/empty/error states, snackbars, banners, dialogs, Undo, retry | `ui-states-and-feedback` |
 | Responsive breakpoints, large-screen/tablet/foldable master-detail, `NavigationRail`-vs-`BottomNavigationBar` by width | `adaptive-layout` |
 | Choosing a Dart 3 construct (sealed, records, class modifiers) | `dart3-idioms-and-coding-standards` |
 | Naming a class/file/variable/boolean | `naming-conventions` |
@@ -50,6 +51,7 @@ Assumes a **single-package Flutter app** by default. Monorepo / pub-workspace gu
 | Writing golden, layout, RTL, or accessibility widget tests | `widget-golden-and-a11y-testing` |
 | Adding a Drift table, DAO, or `.watch` stream | `persistence-drift` |
 | Writing a forward-only schema migration | `run-migration` |
+| Exporting, backing up, sharing, importing, or restoring user data | `data-export-and-restore` |
 | Setting up `build_runner`, `build.yaml`, generated-code policy | `codegen-and-toolchain` |
 | Running codegen before analyze | `run-codegen` |
 | Writing the GitHub Actions CI pipeline and gates | `ci-pipeline-and-gates` |
@@ -62,7 +64,9 @@ Assumes a **single-package Flutter app** by default. Monorepo / pub-workspace gu
 | Editing `pubspec`/lockfile, auditing a new dependency | `dependency-hygiene` |
 | Scaffolding a whole feature module end to end | `scaffold-feature-module` |
 | Structuring tokens → theme → components (no aesthetic values) | `design-system-structure` |
+| Re-baselining committed golden images | `run-goldens-rebaseline` |
 | Running the once-per-app design/QA review before release | `design-review-workflow` |
+| Cutting a release: versioning, signing, symbols, store declarations, rollout | `release-and-store-shipping` |
 
 ## Recommended order when building a feature
 
@@ -70,10 +74,11 @@ Assumes a **single-package Flutter app** by default. Monorepo / pub-workspace gu
 2. **Data layer** — repository = single source of truth / single write path; Drift table + DAO if persisted → `persistence-drift`, `error-handling-typed-results`
 3. **Service seams** — every side effect behind an injected interface → `service-boundary-and-native`
 4. **ViewModel** — `Notifier`/`AsyncNotifier`, `family`/`autoDispose`, intent methods → `state-management-riverpod`
-5. **View + widgets** — dumb `ConsumerWidget`, small `const` widget classes, forms, responsive layout, RTL-safe geometry → `widget-composition`, `forms-and-input`, `adaptive-layout`, `i18n-rtl-l10n`, `accessibility-as-code`
+5. **View + widgets** — dumb `ConsumerWidget`, small `const` widget classes, forms, responsive layout, RTL-safe geometry, and the loading/empty/error states before the happy path is called done → `widget-composition`, `ui-states-and-feedback`, `forms-and-input`, `adaptive-layout`, `i18n-rtl-l10n`, `accessibility-as-code`
 6. **Wire DI + routing** — providers overridden at the composition root; the feature route registers into the single `go_router` → `app-startup-and-bootstrap`, `navigation-and-routing`, `scaffold-feature-module`
 7. **Docs + tests** — `///` on the public surface; core invariants + container/widget tests with fakes → `dartdoc-conventions`, `testing-strategy`, `widget-golden-and-a11y-testing`
 8. **Profile, then the CI gate** — measure in profile mode; format/analyze/codegen/test green → `flutter-performance`, `codegen-and-toolchain`, `ci-pipeline-and-gates`
+9. **Review, then ship** — one end-of-build design/QA pass, then the release artifact: versioning, signing, archived symbols, store declarations, staged rollout → `design-review-workflow`, `release-and-store-shipping`
 
 Throughout: `naming-conventions` and `lint-and-style-config` keep every line honest.
 
