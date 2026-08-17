@@ -252,6 +252,7 @@ Set weight with `fontWeight` **only** — do not also pass `FontVariation('wght'
 - See `design-system-structure` for the theme colours, hairline/shape, and reduced-motion tokens the View snapshots at the widget layer and passes into painter/Scene fields — the painter never reads `BuildContext`. It owns the `resolveMotion` reduced-motion helper this skill's animation path defers to.
 - See `accessibility-as-code` for the never-colour-alone, MediaQuery-a11y-flag, redundant-channel, 44px-target, and `sortKey` rules the Semantics here obey.
 - See `i18n-rtl-l10n` for the canonical-store + localize-at-render contract that feeds display values into `paint()`.
+- See `motion-and-haptics` for what animation on this surface commits to: one haptic per committed gesture, interruptibility, and the declared reduced-motion end state.
 - See `widget-golden-and-a11y-testing` for pinning the painted surface with a golden on real fonts.
 
 ## References

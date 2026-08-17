@@ -60,6 +60,9 @@ Assumes a **single-package Flutter app** by default. Monorepo / pub-workspace gu
 | Modeling money, units, dates in a pure core | `value-objects-money-and-units` |
 | Building on-device reminders/notifications | `local-notifications-scheduler` |
 | Writing a `CustomPainter` + gesture hit-testing | `custom-canvas-and-gestures` |
+| Adding an animation, a haptic, a celebration, or a success/error moment | `motion-and-haptics` |
+| Generating content from a seed or date every device must reproduce identically | `seeded-determinism-and-golden-vectors` |
+| Adding ads, a rewarded earn loop, a paywall, or an entitlement gate | `ads-and-iap-monetization` |
 | Wiring a native channel or platform side effect | `service-boundary-and-native` |
 | Editing `pubspec`/lockfile, auditing a new dependency | `dependency-hygiene` |
 | Scaffolding a whole feature module end to end | `scaffold-feature-module` |

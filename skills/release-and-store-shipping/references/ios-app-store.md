@@ -26,6 +26,39 @@ Upload with Transporter, Xcode's Organizer, or `xcrun altool --upload-app`. On C
 authenticate with an **App Store Connect API key** (`.p8` + Key ID + Issuer ID) held in
 the secret store — never a committed file, never a personal Apple ID password.
 
+## The simulator-slice rejection — clean first, verify before uploading
+
+⚠️ If the tree was previously built for the **simulator** — which it will have been if
+screenshots were just captured — `flutter build ipa` embeds a simulator framework slice and
+Apple rejects the upload with **90087** ("unsupported architectures x86_64") or **91169**
+("references an unsupported platform in the arm64 slice").
+
+**Thinning the fat binary does not fix it.** The remaining arm64 slice still *targets the
+simulator*, because the device slice was never built. Only a clean rebuild works:
+
+```bash
+flutter clean && rm -rf ~/Library/Developer/Xcode/DerivedData/Runner-*
+flutter build ipa --release --obfuscate --split-debug-info=build/symbols/1.4.0+42 \
+  --export-options-plist=ios/ExportOptions.plist
+scripts/check-ipa-slices.sh build/ios/ipa/YourApp.ipa   # arm64 only, iOS platform
+```
+
+On Apple Silicon the simulator slice is *also* arm64, so the architecture alone proves nothing —
+the script reads each Mach-O's build-version load command, which is what actually distinguishes
+a device build from a simulator one. Five seconds, against a ten-minute upload-and-ingest round
+trip.
+
+Two more upload facts worth knowing before they cost a build:
+
+- **Ingest is asynchronous.** A build that is not visible yet is normal; a build that never
+  appears usually means a reused build number (rule 2) — it ingests into nowhere and nothing
+  tells you.
+- **Deprecation notices are warnings.** A minimum-deployment-target notice (`ITMS-90068`-class)
+  comes back on every upload and blocks nothing. Never chase one mid-submission: it costs another
+  build, upload and ingest wait for no review benefit. Schedule it as its own change.
+- Setting `ITSAppUsesNonExemptEncryption` in `Info.plist` removes the export-compliance step from
+  every future upload.
+
 ## Two symbol layers — keep both
 
 | Layer | Produced by | Where it goes |

@@ -54,6 +54,47 @@ users can request deletion. Two traps:
   signature — an outdated plugin without one blocks upload, which is a dependency
   problem discovered at release time unless `dependency-hygiene` caught it earlier.
 
+### Read the SDKs' manifests; do not reason about them
+
+For an app whose own code opens no sockets, **100% of collected data is usually some bundled
+SDK's**. Each ships a manifest declaring exactly what it collects and why — transcribe that
+instead of guessing:
+
+```bash
+find ios/Pods -name 'PrivacyInfo.xcprivacy' -print
+plutil -p ios/Pods/<SDK>/…/<Framework>.framework/PrivacyInfo.xcprivacy
+```
+
+Apple treats the union of all shipped manifests as *inputs*; declaring a **narrower** purpose set
+in the questionnaire than an SDK's manifest lists is legitimate and needs no rebuild — you are
+stating what *this app* does with a capability the SDK merely supports. Two judgement calls that
+recur:
+
+- **Analytics usually applies even with no analytics of your own** — the question covers data used
+  by you *or your third-party partners*.
+- **"Developer's advertising or marketing" usually does not** — an SDK lists it because the network
+  supports it across all publishers, which is not a statement about your app. Revisit the day you
+  ship cross-promotion.
+
+### `NSPrivacyTracking` and `NSPrivacyTrackingDomains` must agree — ITMS-91064
+
+In **your app's** manifest, `NSPrivacyTracking = true` obliges you to list at least one domain in
+`NSPrivacyTrackingDomains`. `true` with an empty array is **rejected: ITMS-91064, "Invalid tracking
+information"**. And listing a domain has a runtime consequence, not just a paperwork one: **iOS
+blocks every listed domain whenever tracking authorization is not granted**, killing even the
+non-personalized requests you were still allowed to make for those users.
+
+For an app whose own binary performs no tracking, the correct resolution is `NSPrivacyTracking =
+false` with `NSPrivacyTrackingDomains` **omitted**. The tracking that actually happens belongs to
+the SDK, is declared in *its* manifest, and is disclosed through the App Store Connect
+questionnaire and `NSUserTrackingUsageDescription`. Mature ad SDKs ship no tracking key and no
+domains for exactly this reason. Keep any accurate **type-level**
+`NSPrivacyCollectedDataTypeTracking` flags — those describe data types and are what clear the
+tracking-permission submission error.
+
+Keep the questionnaire answers as a committed file so the next release re-declares the same thing
+and a diff shows when a dependency bump changed what the app collects.
+
 ## Writing claims that stay true
 
 **Banned as absolutes:** "nothing ever leaves your device", "completely private", "we

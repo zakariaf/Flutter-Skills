@@ -50,7 +50,10 @@ The **`description`** in each skill's YAML frontmatter says *when* it applies. S
 | Applying a schema migration | `run-migration` |
 | Re-baselining golden images | `run-goldens-rebaseline` |
 | End-of-build design/QA review | `design-review-workflow` |
+| Animating, adding haptics, or designing a success/error moment | `motion-and-haptics` |
+| Generating reproducible content from a seed or date | `seeded-determinism-and-golden-vectors` |
 | Cutting a release, signing, store declarations, rollout | `release-and-store-shipping` |
+| Adding ads, a paywall, or an entitlement gate | `ads-and-iap-monetization` |
 
 ## The canonical stack these skills assume
 

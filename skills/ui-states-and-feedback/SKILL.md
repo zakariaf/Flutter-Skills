@@ -252,6 +252,8 @@ user reads before tapping — "Are you sure?" tells them nothing.
 - `widget-composition` — dumb Views, extracted `const` state widgets, no logic in `build()`.
 - `accessibility-as-code` — semantics, live regions, and the a11y flags read from
   `MediaQuery`.
+- `motion-and-haptics` — the sensory half of feedback: what the transition into each of
+  these states animates, the one haptic per committed action, and the reduced-motion path.
 - `i18n-rtl-l10n` — every message in ARB, including failure-code messages.
 - `app-startup-and-bootstrap` — the first-frame/splash path this skill does not cover.
 - `widget-golden-and-a11y-testing` — pumping and asserting each of the four states.

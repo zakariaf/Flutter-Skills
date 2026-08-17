@@ -2,17 +2,17 @@
 name: release-and-store-shipping
 description: >-
   Enforces the path from a green CI run to a shipped build — pubspec `version: x.y.z+N`
-  as the single source of versionName/versionCode (monotonic, never reused), the exact
-  release artifact verified on real hardware, signing and store API keys that never
-  enter the repo, `--obfuscate --split-debug-info` with the symbol directory archived
-  per build or that release's crash reports are permanently unreadable, a permission set
-  audited from the MERGED manifest and asserted whole, store privacy declarations (Play
-  Data Safety, nutrition labels, `PrivacyInfo.xcprivacy`) provable in the repo, size and
+  as the single source of versionName/versionCode (monotonic, never reused), the release
+  artifact verified on real hardware, signing and store API keys that never enter the
+  repo, `--obfuscate --split-debug-info` with symbols archived per build or that
+  release's crash reports are permanently unreadable, a permission set audited from the
+  MERGED manifest and asserted whole, store declarations (Data Safety, nutrition labels,
+  privacy manifests) provable in the repo and read back rather than trusted, size and
   cold-start budgets, and a staged rollout with a halt plan. Use when cutting or tagging
   a release, editing `android/app/build.gradle(.kts)`, `key.properties`,
-  `AndroidManifest.xml`, `Info.plist`, `ExportOptions.plist` or `PrivacyInfo.xcprivacy`,
-  bumping a version, uploading to Play or TestFlight, writing store-listing or privacy
-  copy, symbolizing a crash, or chasing app size or startup time.
+  `AndroidManifest.xml`, `Info.plist` or `PrivacyInfo.xcprivacy`, bumping a version,
+  uploading to Play or TestFlight, writing store-listing or privacy copy, symbolizing a
+  crash, chasing size, or diagnosing an upload rejection or a blocked submission.
 ---
 
 # Release and store shipping
@@ -32,8 +32,10 @@ rules below is always in scope.
 
 Run `scripts/check-release-hygiene.sh` before any release build (and in CI): it is the
 static half of this skill — tracked credentials, a malformed build number, debug
-signing, and debug affordances, none of which need a build to catch. Platform depth
-lives in `references/android-play.md`, `references/ios-app-store.md`, and
+signing, and debug affordances, none of which need a build to catch. Run
+`scripts/check-ipa-slices.sh` on the built IPA *before* spending an upload. Platform depth
+lives in `references/android-play.md`, `references/ios-app-store.md`,
+`references/app-store-connect-submission.md`, and
 `references/privacy-permissions-and-claims.md`.
 
 ## Non-negotiable rules
@@ -96,6 +98,16 @@ lives in `references/android-play.md`, `references/ios-app-store.md`, and
 13. **One tagged commit ships.** Tag the exact commit, attach release notes, and keep
     the artifact + symbol archive with the tag. The dated design-review sign-off
     (`design-review-workflow`) is a precondition, not part of this pass.
+14. **Store-side gates are account-holder-only, and store-side state is never assumed.**
+    Creating the app record, the privacy questionnaire, and the Paid Applications
+    Agreement have no API and block on a human — raise them on day one. An inactive Paid
+    Applications Agreement makes StoreKit return **zero products**, which presents as a
+    broken purchase button, not as a missing agreement. Everything that *is* API-settable
+    (price, territory availability, in-app purchase state, screenshots, metadata) is read
+    **back** from the store before submission — a green upload log is not server state, and
+    a committed screenshot folder is not an uploaded screenshot set. WHY: every one of these
+    blocks submission with a message that names a symptom rather than the setting. See
+    `references/app-store-connect-submission.md`.
 
 ## The ordered release ritual
 
@@ -128,8 +140,13 @@ Run only when a release is explicitly requested. Do not reorder or skip.
    against what the code now does.
 8. **Upload to the internal track / TestFlight and smoke-test from the store**, not
    from a local install — store delivery re-signs and re-compresses the artifact.
-9. **Tag the commit, publish the notes, then start the staged rollout** and watch the
-   crash-free rate against the halt criterion agreed in step 1.
+9. **Reconcile store-side configuration by reading it back** — price and territory
+   availability set, in-app purchases ready and attached to the version, screenshots
+   present for every required display type, metadata complete, and the account-holder-only
+   gates (privacy questionnaire, Paid Applications Agreement) done. Query the store; do not
+   trust the tool that wrote them (`references/app-store-connect-submission.md`).
+10. **Tag the commit, publish the notes, then start the staged rollout** and watch the
+    crash-free rate against the halt criterion agreed in step 1.
 
 ## Version and build number mapping
 
@@ -186,6 +203,13 @@ State this honestly rather than claiming a green pipeline means shippable.
   hotfix that itself takes a review cycle.
 - **Changing `applicationId`/bundle id to "fix" a signing problem** — it creates a
   new app; every existing user is stranded on the old one.
+- **Uploading an IPA built from a tree that last built for the simulator** — Apple
+  rejects it (90087/91169) and thinning the binary cannot fix it; only a clean rebuild can.
+- **Trusting the tool that configured the store instead of reading the store back** —
+  price, availability, in-app-purchase state and screenshots are all commonly "set" and
+  not actually set.
+- **Treating a committed screenshot folder as an uploaded screenshot set** — submission
+  is blocked per display type, and the message names a device class, not a file.
 
 ## Definition of done
 
@@ -206,7 +230,11 @@ State this honestly rather than claiming a green pipeline means shippable.
       previous release's numbers; no unexplained regression.
 - [ ] Dated design-review sign-off present; commit tagged; notes published.
 - [ ] Rollout staged with a written halt criterion and someone watching it.
-- [ ] `scripts/check-release-hygiene.sh` passes on the release commit.
+- [ ] `scripts/check-release-hygiene.sh` passes on the release commit, and
+      `scripts/check-ipa-slices.sh` passes on the IPA before it is uploaded.
+- [ ] Store-side state read back before submission: price and territory availability,
+      in-app purchases ready and attached to the version, screenshots present for every
+      required display type, metadata complete, account-holder-only gates done.
 
 ## When multi-flavor
 
@@ -227,6 +255,9 @@ person's memory. See `service-boundary-and-native` for the flavor composition ro
 - `service-boundary-and-native` — flavors, native seams, and the plugins whose
   manifests get merged.
 - `flutter-performance` — the profile-mode measurement discipline behind the budgets.
+- `ads-and-iap-monetization` — the entitlement, restore-before-init and preload-or-hide
+  rules that decide what an App Review reviewer actually sees, and the ad identifiers the
+  release gate checks.
 
 ## References
 

@@ -6,7 +6,7 @@
 <title>Flutter Agent Skills — best-of-breed Flutter skills for AI coding agents</title>
 <meta name="description" content="A best-of-breed library of general, reusable Flutter engineering skills for Claude Code and any AI coding agent — architecture, Riverpod 3.x state, testing, persistence, i18n/RTL, accessibility, navigation, performance, and more.">
 <meta property="og:title" content="Flutter Agent Skills">
-<meta property="og:description" content="General, reusable Flutter engineering skills for AI coding agents. 37 skills, one open standard, works with 70+ agents.">
+<meta property="og:description" content="General, reusable Flutter engineering skills for AI coding agents. 40 skills, one open standard, works with 70+ agents.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://zakaria.dev/Flutter-Skills/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%8B%3C/text%3E%3C/svg%3E">
@@ -171,7 +171,7 @@
   <section class="hero">
     <div class="wrap">
       <div class="badge-row">
-        <span class="pill"><span class="dot"></span> <span id="pill-count">37 skills</span></span>
+        <span class="pill"><span class="dot"></span> <span id="pill-count">40 skills</span></span>
         <span class="pill">Agent Skills open standard</span>
         <span class="pill">Riverpod 3.x · Material 3</span>
         <span class="pill">MIT</span>
@@ -192,8 +192,8 @@
       <p class="agents-line"><b>Works with 70+ agents</b> via the open skills standard — Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf, Cline, OpenCode &amp; more.</p>
 
       <div class="stats">
-        <div class="stat"><div class="n" id="s-skills">37</div><div class="l">general skills</div></div>
-        <div class="stat"><div class="n" id="s-cats">7</div><div class="l">categories</div></div>
+        <div class="stat"><div class="n" id="s-skills">40</div><div class="l">general skills</div></div>
+        <div class="stat"><div class="n" id="s-cats">8</div><div class="l">categories</div></div>
         <div class="stat"><div class="n">70+</div><div class="l">supported agents</div></div>
         <div class="stat"><div class="n">100%</div><div class="l">design-token-free</div></div>
       </div>
@@ -263,7 +263,7 @@
       <div class="feat">
         <div class="fcard"><div class="fi">🎯</div><h4>Auto-loading</h4><p>A rich <code>description</code> is the trigger — the agent loads a skill only when the task matches, so context stays lean.</p></div>
         <div class="fcard"><div class="fi">📚</div><h4>Progressive disclosure</h4><p>A lean <code>SKILL.md</code> points to <code>references/</code>, <code>examples/</code> &amp; <code>scripts/</code> that load on demand.</p></div>
-        <div class="fcard"><div class="fi">🧭</div><h4>One canonical stack</h4><p>Riverpod 3.x, go_router, Drift, Material 3 — reconciled to a single vocabulary so 37 skills never contradict each other.</p></div>
+        <div class="fcard"><div class="fi">🧭</div><h4>One canonical stack</h4><p>Riverpod 3.x, go_router, Drift, Material 3 — reconciled to a single vocabulary so 40 skills never contradict each other.</p></div>
         <div class="fcard"><div class="fi">🎨</div><h4>Structure, not aesthetics</h4><p>Teaches how components, themes &amp; layouts are <em>structured</em> — never “the colour must be #…”. Drop them into any design.</p></div>
         <div class="fcard"><div class="fi">🔌</div><h4>Cross-agent</h4><p>Built on the Agent Skills open standard — the same files work in Claude Code, Cursor, Codex, Copilot and 70+ more.</p></div>
         <div class="fcard"><div class="fi">✅</div><h4>Adversarially reviewed</h4><p>Every skill was reviewed for API correctness (Riverpod 3.x, Drift, WCAG) and scrubbed of app-domain &amp; design-token specifics.</p></div>
@@ -305,10 +305,10 @@
     document.querySelectorAll('#install .tabpanel').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-tab')===t.getAttribute('data-tab'))});});}
   // stats
   var GH='https://github.com/zakariaf/Flutter-Skills/blob/main/skills/';
-  document.getElementById('s-skills').textContent=SKILLS.length||37;
-  document.getElementById('pill-count').textContent=(SKILLS.length||37)+' skills';
+  document.getElementById('s-skills').textContent=SKILLS.length||40;
+  document.getElementById('pill-count').textContent=(SKILLS.length||40)+' skills';
   var catSet={};SKILLS.forEach(function(s){catSet[s.category]=1});
-  document.getElementById('s-cats').textContent=(CATS.length||Object.keys(catSet).length||7);
+  document.getElementById('s-cats').textContent=(CATS.length||Object.keys(catSet).length||8);
   // chips
   var active='all',q='';
   var chips=document.getElementById('chips');

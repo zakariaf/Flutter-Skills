@@ -176,6 +176,7 @@ Full chip widget rendering all three signals: `examples/status_encoding.dart`.
 - See `app-startup-and-bootstrap` for the `main()` ordering that restores the theme before `runApp`.
 - See `i18n-rtl-l10n` for per-script fonts, directional geometry, and RTL goldens.
 - See `lint-and-style-config` for promoting the no-raw-values grep into a CI gate.
+- See `motion-and-haptics` for what the motion tokens are spent on: the moment catalog, the haptic event map, and the degradation each moment declares.
 - See `design-review-workflow` for the once-per-app screenshot sweep that judges the assembled system.
 
 ## References
