@@ -273,6 +273,7 @@ test('debounced search fires once after the window', () {
 - See `async-safety` for the dropped-Future holes the silence-review checklist targets.
 - See `service-boundary-and-native` for the injectable ports the fakes stand in for.
 - See `ci-pipeline-and-gates` for how these lanes and greps are wired as gates.
+- See `seeded-determinism-and-golden-vectors` for pinning a seeded generator with a frozen fingerprint table when output must reproduce across devices and releases.
 
 ## References
 

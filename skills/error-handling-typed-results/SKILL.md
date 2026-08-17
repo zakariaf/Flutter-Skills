@@ -204,6 +204,8 @@ Future<Result<Report, ComputeFailure>> buildReport(ReportInput input) async {
 - See `i18n-rtl-l10n` for mapping a failure `code` to a localized message and for numeral normalize-before-parse (do not duplicate it here).
 - See `testing-strategy` for asserting on `Err` branches and `fake_async` clock-driven debounce/purge tests.
 - See `lint-and-style-config` for promoting `avoid_catches_without_on_clauses`, `unawaited_futures`, and `unused_result` to errors.
+- See `ui-states-and-feedback` for how a `Failure` code becomes an error state, a snackbar, or an Undo — never a rendered exception.
+- See `data-export-and-restore` for the user-facing end of never-lose-data: versioned backups and an all-or-nothing restore.
 
 ## References
 

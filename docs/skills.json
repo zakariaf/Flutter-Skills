@@ -2,7 +2,7 @@
   "name": "Flutter Agent Skills",
   "repo": "zakariaf/Flutter-Skills",
   "standard": "https://agentskills.io",
-  "count": 33,
+  "count": 40,
   "categories": [
     {
       "key": "core-flutter",
@@ -29,6 +29,10 @@
       "label": "Internationalization & accessibility"
     },
     {
+      "key": "shipping-monetization",
+      "label": "Shipping & monetization"
+    },
+    {
       "key": "workflow-tooling",
       "label": "Workflows & tooling"
     }
@@ -46,7 +50,7 @@
     },
     {
       "name": "dart3-idioms-and-coding-standards",
-      "description": "Enforces which Dart 3 construct each declaration earns — sealed class + exhaustive switch with no `default:`/`case _:`, the three class modifiers (`sealed`/`final`/`abstract interface class`) and skip the rest, records as intra-layer tuples only, immutable value types (`final` fields, `const` ctor, value equality) hand-rolled when trivial and `freezed` when boilerplate dominates, explicit stable identity, total non-throwing domain functions, make-illegal-states-unrepresentable, and firm method/build/file/nesting complexity limits (the single-source-of-truth table other skills cite) — while banning `late`/`!`/`dynamic` honesty dodges. Use when authoring or reviewing any Dart type or declaration: class vs enum vs record vs typedef, hand-rolled vs `freezed`, adding a `switch`/`if-case`, writing `copyWith` or `==`/`hashCode`, deciding identity, keeping a domain function total, or hitting a length/nesting limit.",
+      "description": "\"Enforces which Dart 3 construct each declaration earns — sealed class + exhaustive switch with no `default:`/`case _:`, the three class modifiers (`sealed`/`final`/`abstract interface class`) and skip the rest, records as intra-layer tuples only, immutable value types (`final` fields, `const` ctor, value equality) hand-rolled when trivial and `freezed` when boilerplate dominates, explicit stable identity, total non-throwing domain functions, make-illegal-states-unrepresentable, and firm method/build/file/nesting complexity limits (the single-source-of-truth table other skills cite) — while banning `late`/`!`/`dynamic` honesty dodges. Use when authoring or reviewing any Dart type or declaration: class vs enum vs record vs typedef, hand-rolled vs `freezed`, adding a `switch`/`if-case`, writing `copyWith` or `==`/`hashCode`, deciding identity, keeping a domain function total, or hitting a length/nesting limit.\"",
       "category": "core-flutter",
       "categoryLabel": "Core Flutter & Dart",
       "priority": "core",
@@ -93,6 +97,16 @@
       "rich": false,
       "manual": false,
       "path": "skills/naming-conventions"
+    },
+    {
+      "name": "ui-states-and-feedback",
+      "description": "Enforces the non-happy paths every screen owes the user — loading/empty/error/content resolved in ONE switch over an AsyncValue or sealed view state, never an isLoading+error+data bool triple; a delayed skeleton shaped like the result instead of a spinner that flashes; a refresh that keeps stale content on screen; \"nothing yet\" distinguished from \"nothing matches this filter\", each with its own action; error text from a typed Failure code (never e.toString()) plus a retry that invalidates the provider; the surface ladder inline, snackbar, banner, dialog, with a modal earned only by a decision that must resolve now; soft-delete + Undo over a confirmation; showDialog's null dismissal handled as its own outcome; ScaffoldMessenger captured before an await; and announcements for eye-only changes. Use when writing loading, empty, error, or offline UI, calling AsyncValue.when, showDialog, showModalBottomSheet, showSnackBar or showMaterialBanner, or adding a confirmation, Undo, or retry.",
+      "category": "core-flutter",
+      "categoryLabel": "Core Flutter & Dart",
+      "priority": "high",
+      "rich": true,
+      "manual": false,
+      "path": "skills/ui-states-and-feedback"
     },
     {
       "name": "app-startup-and-bootstrap",
@@ -215,6 +229,16 @@
       "path": "skills/custom-canvas-and-gestures"
     },
     {
+      "name": "motion-and-haptics",
+      "description": "Enforces designed interaction feedback instead of the framework default — every committing interaction acknowledged in the same frame, motion that decorates state but never IS the state (the end state is identical with animations off), a named catalog of moments each declaring its trigger, duration role, haptic slot and reduced-motion fallback at design time, haptics as a HapticTheme event-to-intensity map fired exactly once on the commit frame (never per animation frame, never per coalesced input, never heavyImpact for an error) behind one central toggle, every animation interruptible so a tap resolves it to its end state, a bounded celebration that plays once and never loops or blocks input, an explicit stop condition on every repeating animation (off-route, backgrounded, reduced motion), and feedback on more than one channel so haptics and sound survive reduced motion. Use when adding or tuning an animation, a success or error state, a haptic, a celebration, or a screen transition.",
+      "category": "structure-foundation",
+      "categoryLabel": "Structure & foundations",
+      "priority": "medium",
+      "rich": true,
+      "manual": false,
+      "path": "skills/motion-and-haptics"
+    },
+    {
       "name": "persistence-drift",
       "description": "Governs the on-device Drift/SQLite data layer: package:drift and package:sqlite3 confined to lib/data/ behind DAOs that map rows to immutable value objects (no Drift symbol leaks past the repository), invariants pushed into the schema (STRICT tables, CHECK/FK/partial-UNIQUE indexes), foreign_keys/WAL pragmas re-asserted idempotently in beforeOpen, one db.transaction per mutation, persist-before-publish, every query awaited, canonical integer storage, derived state recomputed-on-read never stored, scoped .watch streams, keyset (seek) pagination not OFFSET, and WAL-safe backups (checkpoint + VACUUM INTO, verify-by-reopen, never File.copy a live WAL DB). Use when defining or altering a Drift Table, Companion, DAO, index, or CHECK; writing a repository transaction or scoped watch provider; wiring the connection/beforeOpen pragmas; adding SQLCipher; building or verifying a backup; or reviewing a data-layer diff. Migrations and their tests live in run-migration.",
       "category": "data",
@@ -233,6 +257,16 @@
       "rich": true,
       "manual": false,
       "path": "skills/value-objects-money-and-units"
+    },
+    {
+      "name": "data-export-and-restore",
+      "description": "Enforces user-facing data portability in an offline-first app — backup/restore (exact, machine round-trippable) kept strictly separate from export/report (human, lossy, never a restore source); a versioned envelope carrying formatVersion, schemaVersion, appVersion, exportedAtUtc and a payload checksum so a restore refuses a file from a newer app instead of corrupting the database; restore as an all-or-nothing import into a staging database swapped in only after validation; canonical values in machine formats (integer minor units, SI integers, ISO-8601 UTC, stable ids) and never localized numerals; RFC 4180 CSV quoting plus the =/+/-/@ formula-injection escape; streaming writes published by atomic rename; the share sheet behind an injected Gateway; and an export→import→export round-trip test on a hostile fixture. Use when adding or changing export, backup, import, restore, share, or CSV/JSON/PDF output, writing an import validator or merge-vs-replace policy, or handling a picked file.",
+      "category": "data",
+      "categoryLabel": "Data",
+      "priority": "medium",
+      "rich": true,
+      "manual": false,
+      "path": "skills/data-export-and-restore"
     },
     {
       "name": "testing-strategy",
@@ -265,6 +299,16 @@
       "path": "skills/widget-golden-and-a11y-testing"
     },
     {
+      "name": "seeded-determinism-and-golden-vectors",
+      "description": "Enforces reproducible derived content — output every device must compute identically from a key, with no server. The key is injected, never read from a clock; a calendar-day key is a civil date, not an instant, and one day definition serves every comparison; the seed is a specified hash plus a mix step feeding a PRNG you own, never `dart:math`'s `Random`; entropy has exactly one source, so no `DateTime.now()`, no ambient `Random()`, no ordering by `identityHashCode`; content is regenerated from (key, generatorVersion) rather than stored; a shipped generator is frozen and an improvement is a versioned cutover, never an in-place edit that rewrites history; and it is pinned by a committed golden-vector table of fingerprints from an independent oracle, regenerated only by a reviewed command CI verifies but never blesses. Use when generating content from a seed or date, writing or regenerating golden vectors, versioning a generator, or debugging output that differs between devices or runs.",
+      "category": "quality-testing",
+      "categoryLabel": "Quality & testing",
+      "priority": "medium",
+      "rich": true,
+      "manual": false,
+      "path": "skills/seeded-determinism-and-golden-vectors"
+    },
+    {
       "name": "accessibility-as-code",
       "description": "Enforces accessibility as a correctness property authored into each widget — Semantics(button/label) or ExcludeSemantics on every node, a11y state read from MediaQuery not app state, never MediaQuery.withClampedTextScaling / textScaleFactor / FittedBox / TextOverflow.ellipsis to fit a label, non-color redundant channels (icon+label+shape+text) for every state, contrast against composited backgrounds (4.5:1 body / 3:1 large), 44px single-tap targets, OrdinalSortKey traversal, and honoring boldText / reduce-motion. Use when adding a GestureDetector/InkWell or any tap target, adding an Icon or Image, reaching for withClampedTextScaling/FittedBox/ellipsis/textScaleFactor to make text fit, encoding state via color, sizing type, ordering focus traversal, or reviewing any View for screen-reader/switch/low-vision support.",
       "category": "i18n-a11y",
@@ -283,6 +327,26 @@
       "rich": true,
       "manual": false,
       "path": "skills/i18n-rtl-l10n"
+    },
+    {
+      "name": "ads-and-iap-monetization",
+      "description": "Enforces opt-in, rewarded-first monetization over the service seam — a rewarded view grants exactly one benefit and only on a genuine reward outcome (a sealed Rewarded/Dismissed/NoFill), earn loops capped per day against an injected Clock, the earn control preloaded and hidden unless an ad is loaded so a fresh account never dead-ends on \"no ads available\" (a Guideline 2.1 risk), interstitials only at a natural break under a count-and-elapsed cap owned by the service so callers stay dumb, no banner on the primary work surface, one non-consumable unlock plus Restore re-checked each launch and committed through the single write path before the UI reacts, one derived isEntitled provider as the only gate, and the entitlement restored BEFORE the ad SDK initializes so a paying user never starts it, resolves consent, or sees a tracking prompt. Use when adding ads, wiring a rewarded earn loop, placing an interstitial, building a paywall, gating an entitlement, or setting up ad units.",
+      "category": "shipping-monetization",
+      "categoryLabel": "Shipping & monetization",
+      "priority": "high",
+      "rich": true,
+      "manual": false,
+      "path": "skills/ads-and-iap-monetization"
+    },
+    {
+      "name": "release-and-store-shipping",
+      "description": "Enforces the path from a green CI run to a shipped build — pubspec `version: x.y.z+N` as the single source of versionName/versionCode (monotonic, never reused), the release artifact verified on real hardware, signing and store API keys that never enter the repo, `--obfuscate --split-debug-info` with symbols archived per build or that release's crash reports are permanently unreadable, a permission set audited from the MERGED manifest and asserted whole, store declarations (Data Safety, nutrition labels, privacy manifests) provable in the repo and read back rather than trusted, size and cold-start budgets, and a staged rollout with a halt plan. Use when cutting or tagging a release, editing `android/app/build.gradle(.kts)`, `key.properties`, `AndroidManifest.xml`, `Info.plist` or `PrivacyInfo.xcprivacy`, bumping a version, uploading to Play or TestFlight, writing store-listing or privacy copy, symbolizing a crash, chasing size, or diagnosing an upload rejection or a blocked submission.",
+      "category": "shipping-monetization",
+      "categoryLabel": "Shipping & monetization",
+      "priority": "high",
+      "rich": true,
+      "manual": false,
+      "path": "skills/release-and-store-shipping"
     },
     {
       "name": "flutter-conventions-index",
@@ -343,6 +407,16 @@
       "rich": false,
       "manual": false,
       "path": "skills/design-review-workflow"
+    },
+    {
+      "name": "run-goldens-rebaseline",
+      "description": "Runs the golden re-baselining ritual — the one sanctioned way committed reference images are overwritten. Enforces the order: land and green the non-golden geometry, contrast and a11y tests FIRST, re-baseline only in the pinned blessing environment that produced the committed images, with loadAppFonts() so nothing renders in Ahem, via `flutter test --update-goldens --tags golden` (never in CI, never to make a red pipeline green), then inspect every changed PNG by eye, delete the orphans left by renamed or removed tests, land the images as their own commit naming why they moved, and prove it by re-running the suite WITHOUT the flag. Manual, side-effecting workflow. Use when a deliberate visual change breaks matchesGoldenFile, when adding or renaming a golden test, or when someone reaches for --update-goldens.",
+      "category": "workflow-tooling",
+      "categoryLabel": "Workflows & tooling",
+      "priority": "medium",
+      "rich": false,
+      "manual": true,
+      "path": "skills/run-goldens-rebaseline"
     },
     {
       "name": "run-migration",

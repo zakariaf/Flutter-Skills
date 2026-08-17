@@ -4,11 +4,11 @@
 
 **Production-grade, reusable Flutter engineering skills for AI coding agents.**
 
-Architecture · Riverpod 3.x state · testing · persistence · i18n/RTL · accessibility · navigation · performance — and the codegen/CI/migration runbooks that keep them honest.
+Architecture · Riverpod 3.x state · testing · persistence · i18n/RTL · accessibility · navigation · performance · shipping & monetization — and the codegen/CI/migration runbooks that keep them honest.
 
 [**Browse the catalog →**](https://zakaria.dev/Flutter-Skills/) · [Agent Skills standard](https://agentskills.io) · [Contributing](CONTRIBUTING.md)
 
-`33 skills` · `Riverpod 3.x` · `Material 3` · `works with 70+ agents` · `MIT`
+`40 skills` · `Riverpod 3.x` · `Material 3` · `works with 70+ agents` · `MIT`
 
 </div>
 
@@ -22,9 +22,10 @@ Built on the [**Agent Skills**](https://agentskills.io) open standard, so the sa
 **Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf, Cline, OpenCode** and 70+ more — not
 only Claude Code.
 
-These 33 skills were distilled from five production Flutter apps' private skill libraries (~120
+These skills were distilled from five production Flutter apps' private skill libraries (~120
 skills), merged into one best-of-breed set, reconciled to a single canonical stack, and
-adversarially reviewed for API correctness. **Design-token specifics** (exact colours, radii,
+adversarially reviewed for API correctness — then extended with the shipping, monetization and
+determinism lessons from a multi-app studio that ships to the App Store. **Design-token specifics** (exact colours, radii,
 shadows, named design systems) and **app-domain skills** were intentionally left out — this is the
 general foundation, not any one app's look or domain.
 
@@ -47,7 +48,7 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 - **Single-package first, workspace-aware.** Everything works for a plain single-package app;
   monorepo / pub-workspace / Melos guidance is fenced under *"when multi-package"*.
 - **One canonical stack.** Feature-first layout, Riverpod 3.x, `go_router`, Drift, `package:clock`,
-  Material 3 — reconciled to a single vocabulary so the 33 skills never contradict each other.
+  Material 3 — reconciled to a single vocabulary so the 40 skills never contradict each other.
 - **Structure, not aesthetics.** Design-system and component skills teach *how* tokens, themes,
   components, pages, and views are **structured** — never "the colour must be `#…`".
 - **Progressive disclosure.** Core skills ship a lean `SKILL.md` plus on-demand `references/`,
@@ -71,6 +72,7 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 | `flutter-performance` | `const` subtrees, rebuilds narrowed via `.select`, lazy lists/slivers, off-isolate work, sized image decode, surgical `RepaintBoundary`, profile-mode measurement. |
 | `app-startup-and-bootstrap` | `main()` ordering: crash log + two global error handlers first, settings before `runApp`, composition-root DI overrides, lifecycle flush, no `runZonedGuarded`. |
 | `dartdoc-conventions` | `///` on every public API, standalone one-sentence summary, documented units/ranges/throws, `//` explains *why* not *what*. |
+| `ui-states-and-feedback` **(rich)** | The non-happy paths: loading/empty/error/content resolved in one `switch`, delayed skeletons, filtered-empty vs empty, typed-`Failure` error text with retry, the inline → snackbar → banner → dialog ladder, Undo over confirm. |
 | `forms-and-input` **(rich)** | `Form`/`TextFormField`, sync + async validation, `FocusNode` traversal, keyboard actions, input formatters, error display, controller disposal. |
 | `local-notifications-scheduler` **(rich)** | On-device reminders: DB is the only source of truth, one idempotent `syncNotifications()` reconcile, plugin behind a gateway port, DST-correct recurrence, iOS 64-cap budgeting. |
 
@@ -89,12 +91,14 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 | `design-system-structure` **(rich)** | *Token-agnostic* design-system organization: tokens→theme→modifiers layering, two-tier tokens via `ThemeExtension`, no-raw-values CI gate. |
 | `adaptive-layout` **(rich)** | Adapt by size not device: Material 3 window size classes, `LayoutBuilder`/`MediaQuery.sizeOf`, list-detail two-pane, `NavigationRail`-vs-`BottomNav` by width. |
 | `custom-canvas-and-gestures` **(rich)** | `CustomPainter` technique: View/Painter/Scene split, `shouldRepaint` as one value compare, one shared transform read by painter *and* hit-tester, gesture→typed-command. |
+| `motion-and-haptics` **(rich)** | What the motion tokens are spent on: same-frame acknowledgment, a declared moment catalog, one haptic per commit from an event map, interruptible animation, bounded celebration, stop conditions. |
 
 ### Data
 | Skill | What it governs |
 |---|---|
 | `persistence-drift` **(rich)** | Drift/SQLite behind DAOs mapping rows to value objects, schema-level invariants, one-transaction-per-mutation, scoped `.watch` streams, WAL-safe backups. |
 | `value-objects-money-and-units` **(rich)** | Store canonically (integer minor units keyed to real ISO-4217 exponent, SI ints, UTC), convert only at the edge, one largest-remainder `allocate()`, inject a `Clock`. |
+| `data-export-and-restore` **(rich)** | Portable data: a versioned+checksummed backup envelope, all-or-nothing restore via staging-then-swap, canonical values in machine formats, RFC 4180 + formula-injection-safe CSV, share behind a Gateway. |
 
 ### Quality & testing
 | Skill | What it governs |
@@ -102,12 +106,19 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 | `testing-strategy` **(rich)** | Test shape follows code not the pyramid: clock-injected pure core, fakes over mocks for owned code, property/fuzz with independent oracles, one acceptance gate. |
 | `widget-golden-and-a11y-testing` **(rich)** | `pumpApp` harness with device/`MediaQuery` presets, per-(device,scale,bold) overflow matrix, two golden lanes, RTL goldens, honest a11y limits. |
 | `lint-and-style-config` **(rich)** | A strict `analysis_options.yaml`: `very_good_analysis` + `strict-casts`/`strict-raw-types`, silent-failure lints promoted to error, suppression discipline. |
+| `seeded-determinism-and-golden-vectors` **(rich)** | Output every device must compute identically: injected key, civil-date days, one seeded entropy source, regenerate-don't-store, versioned cutovers, a frozen fingerprint table from an independent oracle. |
 
 ### Internationalization & accessibility
 | Skill | What it governs |
 |---|---|
 | `i18n-rtl-l10n` **(rich)** | gen-l10n/ARB with key+placeholder parity, ICU plurals, `Directional`-only geometry, bidi isolation, canonical-store + localize-at-render, numeral normalize-before-parse. |
 | `accessibility-as-code` | A11y as a correctness property: `Semantics` on every node, read a11y flags from `MediaQuery`, never clamp `textScaler`, never colour-alone, 44px targets. |
+
+### Shipping & monetization
+| Skill | What it governs |
+|---|---|
+| `release-and-store-shipping` **(rich)** | From green CI to a shipped build: `x.y.z+N` as the only version source, no keys in the repo, archived obfuscation symbols, merged-manifest permission audit, store declarations read back rather than trusted, size/startup budgets, staged rollout. |
+| `ads-and-iap-monetization` **(rich)** | Opt-in rewarded grants on a sealed outcome, per-day caps, preload-or-hide so a control never dead-ends, service-owned interstitial caps, one entitlement gate, and restore *before* the ad SDK initializes. |
 
 ### Workflows & tooling
 | Skill | What it governs |
@@ -120,6 +131,7 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 | `design-review-workflow` | Once-per-app end-of-build QA sweep: every screen × light/dark × LTR+RTL × largest text × reduce-motion, graded BLOCKER/FIX/NOTE, a dated sign-off that gates release. |
 | `run-codegen` *(manual-only)* | The deterministic `build_runner` pass before analyze: the pinned command with `--delete-conflicting-outputs`, never hand-edit or commit-force generated output. |
 | `run-migration` *(manual-only)* | The forward-only Drift/SQLite migration ritual: mandatory pre-migration snapshot, bump by one, append-only steps, tests over every from→to path + a forced-throw restore. |
+| `run-goldens-rebaseline` *(manual-only)* | The only sanctioned way committed golden images are overwritten: real assertions green first, blessing environment only, inspect every changed PNG, delete orphans, prove it without the flag. |
 
 > A full, searchable catalog with descriptions and filters lives on the
 > **[website](https://zakaria.dev/Flutter-Skills/)**.

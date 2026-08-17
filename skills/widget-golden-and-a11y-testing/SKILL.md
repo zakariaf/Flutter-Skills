@@ -270,6 +270,9 @@ testWidgets('card mirrors correctly in RTL', (tester) async {
   should not try to re-prove.
 - See `state-management-riverpod` for the `ProviderScope`/override seam `pumpApp`
   uses, and `ci-pipeline-and-gates` for wiring the golden lanes and greps into CI.
+- See `run-goldens-rebaseline` for the one sanctioned ritual that overwrites
+  committed golden images, and `ui-states-and-feedback` for the four screen states
+  each golden and widget test pumps.
 
 ## References
 
