@@ -30,19 +30,82 @@ The repo, the fastlane log, and your memory are all statements about intent. Rea
 - **Price and availability are unset on a new app and block submission.** Both halves are
   API-settable — a price schedule with a base territory, and territory availability. Neither has
   a sensible default, and the submission error does not say which is missing.
-- **In-app purchases.**
+- **In-app purchases.** See "The first in-app purchase must ride an app version" below — it is
+  the single most expensive thing on this page.
   - ⚠️ `MISSING_METADATA` on an IAP usually means **missing territory availability**, not a
     missing screenshot. An availability query that 404s means none is set; setting it flips the
-    product straight to `READY_TO_SUBMIT`.
-  - ⚠️ Product identifiers accept alphanumerics, underscores and periods — **no hyphens** — even
-    when the bundle id has one.
-  - **Attach the IAP to the version** when submitting, or it reviews separately and lags a
-    release behind.
-  - Add the required review screenshot; a shot of the screen that offers the purchase is enough.
+    product to a submittable state.
+  - ⚠️ **A submittable state is not a submitted state.** The API's `READY_TO_SUBMIT` is the UI's
+    *Prepare for Submission*: fully configured, never sent to anyone.
+  - ⚠️ Product identifiers are **immutable after save and can never be reused**, even if the
+    product is deleted. Apple's documentation lists hyphens as legal, but the App Store Connect
+    **API** has rejected a hyphenated id (409: "only alphanumeric, underscores, periods") — so
+    keep API-created ids hyphen-free even when the bundle id has one.
+  - Required before an IAP can be *added* to a submission: reference name (≤ 64 chars), product
+    id, **display name 2–30 chars**, **description ≤ 45 chars**, an **App Review screenshot**,
+    plus price, availability and a **tax category**. Review notes cap at 4000 chars.
+  - The review screenshot is JPG/PNG at any size valid for your app's platforms, must clearly
+    show the item being offered, and once uploaded **can be replaced but never removed**.
+  - At least one localization is required. Ship one per app locale, or every other storefront
+    shows that one language's product text.
 - Endpoint paths for availability have moved between API versions. When one 404s, check the
   current API reference rather than concluding the setting does not exist.
 
 Script the read-back and run it as the last step, not the first.
+
+## The first in-app purchase must ride an app version
+
+Apple's rule, verbatim:
+
+> The first consumable, non-consumable, auto-renewable subscription, and non-renewing
+> subscription In-App Purchase of each type must be submitted with a new app version.
+
+Only **after** the first item of that type is approved may later ones be submitted alone, and
+only while the app already has at least one approved version.
+
+So a first release submits **two items**: the app version *and* the in-app purchase. Submitting
+the version by itself does not merely delay the purchase — App Review **closes the whole
+submission without reviewing the app**, under **Guideline 2.1(b) — Performance, App
+Completeness**, with the message *"We are unable to complete the review of the app because one
+or more of the In-App Purchase products have not been submitted for review."*
+
+The check is one request, and it belongs *before* submitting:
+
+```
+GET /v1/reviewSubmissions/{id}/items      →  total must be 2, not 1
+```
+
+⚠️ **Recovering costs a new binary.** Apple's remedy is explicit — *"submit the In-App Purchase
+products **and** upload a new binary"* — and the version is stuck in a rejected state anyway. So
+the fix is: bump the build number, clean-rebuild (see `ios-app-store.md` for the slice trap),
+upload, then submit both items together. Budget a full review cycle for a metadata mistake.
+
+**Recovering from any rejected item**, in the UI: App Review → open the submission → read
+Messages → *Edit* the rejected item → Save → **Update Review** → **Resubmit to App Review**.
+Every item must be accepted before anything ships — an item marked *Accepted* (rather than
+*Approved*) means it passed while a sibling in the same submission did not.
+
+### Two vocabularies for one state
+
+Tooling reads the API; reviewer messages quote the UI. They disagree, which makes a status
+report confusing exactly when you are under time pressure:
+
+| API | UI | Meaning |
+|---|---|---|
+| `READY_TO_SUBMIT` | Prepare for Submission | configured, **never submitted** |
+| — | Ready for Review | added to a draft submission, not yet sent |
+| `WAITING_FOR_REVIEW` | Waiting for Review | sent |
+| `IN_REVIEW` | In Review | being reviewed |
+| `APPROVED` | Approved | done |
+| — | Accepted | passed, but a sibling item was rejected |
+| `REJECTED` | Rejected | fix → Update Review → Resubmit |
+| `DEVELOPER_REJECTED` | Developer Rejected | you pulled it; Add for Review to restore |
+
+### Before any of this works at all
+
+The **Paid Applications Agreement must be Active — including to test in sandbox**. And in-app
+purchase metadata edits take **up to an hour** to propagate to sandbox, so a product that "isn't
+there yet" may simply be young. Rule out both before debugging StoreKit.
 
 ## Screenshots: capturing is not uploading
 

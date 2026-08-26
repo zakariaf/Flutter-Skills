@@ -66,7 +66,11 @@ bucket.
    the thing reflows layout, invites mis-taps, and earns the least of any format. A menu or home
    surface is the only defensible placement, and it is optional.
 
-8. **One non-consumable unlock plus Restore, re-checked on every launch.** Sell it once; expose a
+8. **One non-consumable unlock plus Restore, re-checked on every launch.** ⚠️ On the app's
+    **first** release the unlock must be submitted **in the same App Review submission as the
+    app version** — Apple requires the first purchase of each type to ride a version, and
+    shipping the version alone gets the whole submission closed unreviewed under Guideline
+    2.1(b) (`release-and-store-shipping`). Sell it once; expose a
    visible **Restore**; silently re-check entitlement at launch so a reinstall or a new device
    re-grants it without a support ticket. Not a subscription for a one-time capability, and not a
    consumable currency sold for cash where an opt-in rewarded path already exists.
@@ -198,6 +202,8 @@ that single assertion is what keeps rule 10 true through future refactors.
       caps and reports whether it showed; no caller counts.
 - [ ] No banner on any primary work surface.
 - [ ] One non-consumable + a visible Restore; entitlement silently re-checked at every launch.
+- [ ] On a first release, the product ships in the **same submission** as the app version, with
+      its App Review screenshot, tax category, availability, and one localization per app locale.
 - [ ] `isEntitled` is the single gate; no feature branches on the raw entitlement stream.
 - [ ] Restore runs **before** `AdsService.init()`; a test asserts the fake's `initCount == 0` for an
       entitled user; a failed restore falls back to *not entitled* with a local cache for offline.
