@@ -106,7 +106,14 @@ lives in `references/android-play.md`, `references/ios-app-store.md`,
     (price, territory availability, in-app purchase state, screenshots, metadata) is read
     **back** from the store before submission — a green upload log is not server state, and
     a committed screenshot folder is not an uploaded screenshot set. WHY: every one of these
-    blocks submission with a message that names a symptom rather than the setting. See
+    blocks submission with a message that names a symptom rather than the setting.
+15. **A first release submits the app version AND its first in-app purchase together.**
+    Apple requires the first purchase of each type to ride an app-version submission; ship the
+    version alone and App Review closes the submission **without reviewing the app**
+    (Guideline 2.1(b)), and the remedy costs a new binary plus a full review cycle. Verify with
+    one request before submitting — `GET /v1/reviewSubmissions/{id}/items` must return **2**
+    items, not 1. WHY: a configured purchase reports a submittable state that reads, to every
+    tool and every human, exactly like a submitted one. See
     `references/app-store-connect-submission.md`.
 
 ## The ordered release ritual
@@ -210,6 +217,10 @@ State this honestly rather than claiming a green pipeline means shippable.
   not actually set.
 - **Treating a committed screenshot folder as an uploaded screenshot set** — submission
   is blocked per display type, and the message names a device class, not a file.
+- **Submitting a first app version without its first in-app purchase** — App Review closes
+  the submission without reviewing the app, and the fix needs a whole new binary.
+- **Reading a purchase's "ready to submit" state as "submitted"** — it means configured
+  and untouched by anyone.
 
 ## Definition of done
 
@@ -235,6 +246,9 @@ State this honestly rather than claiming a green pipeline means shippable.
 - [ ] Store-side state read back before submission: price and territory availability,
       in-app purchases ready and attached to the version, screenshots present for every
       required display type, metadata complete, account-holder-only gates done.
+- [ ] On a first release, the submission carries **both** the app version and the first
+      in-app purchase (`reviewSubmissions/{id}/items` returns 2), each purchase having its
+      review screenshot, tax category, availability and one localization per app locale.
 
 ## When multi-flavor
 
