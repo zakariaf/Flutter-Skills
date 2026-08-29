@@ -1,17 +1,18 @@
 ---
 name: i18n-rtl-l10n
 description: >-
-  Enforces the gen-l10n/ARB localization contract: every user-facing string routed through
-  AppLocalizations from a template app_en.arb with key + placeholder parity across locales,
-  nullable-getter:false so a missing key is a compile error, ICU plural/select over string
-  concatenation, Directional-only geometry (EdgeInsetsDirectional, AlignmentDirectional,
-  TextAlign.start, Icons.adaptive) for correct-by-construction RTL, one FSI/PDI bidi-isolation
-  helper for mixed-script runs, per-locale NumberFormat with a pinned numbering system fed to
-  chrome and canvas alike, canonical UTC-epoch + ASCII storage with calendar/numeral projection
-  only at render, and normalize-to-ASCII before any numeric parse. Use when adding or translating
-  an ARB key, building an RTL screen, formatting or parsing dates/numbers/numerals, wiring
-  l10n.yaml, AppLocalizations, or MaterialApp localization delegates, isolating technical IDs like
-  an account or order reference, or touching app_*.arb.
+  Enforces the gen-l10n/ARB localization contract: every string through AppLocalizations from a
+  template app_en.arb, key + placeholder parity, nullable-getter:false so a missing key is a
+  compile error, ICU plural/select over concatenation, Directional-only geometry
+  (EdgeInsetsDirectional, AlignmentDirectional, TextAlign.start, Icons.adaptive), FSI/PDI
+  isolation for mixed-script runs, per-locale NumberFormat with a pinned numbering system,
+  canonical UTC-epoch + ASCII storage projected only at render, normalize-to-ASCII before any
+  parse, and three vendored LocalizationsDelegates ahead of the Global* ones for a locale
+  flutter_localizations lacks. Use when adding or translating an ARB key, building an RTL screen,
+  formatting or parsing dates/numbers/numerals, wiring l10n.yaml, AppLocalizations, or MaterialApp
+  localizationsDelegates, supporting a locale Flutter lacks (ckb), fixing a locale that crashes on
+  Tooltip or renders LTR, checking bundled-font glyph coverage, isolating technical IDs, or
+  touching app_*.arb.
 ---
 
 # i18n, RTL & Localization
@@ -27,6 +28,7 @@ Read the reference for the task at hand:
 - `references/arb-and-icu.md` — the ARB add/translate workflow, `l10n.yaml`, ICU plural/select, placeholder typing.
 - `references/rtl-and-bidi.md` — the directional-geometry allow/ban table, icon mirroring, bidi isolation, CustomPainter pinned LTR, RTL charts.
 - `references/numerals-and-calendars.md` — digit systems, separator traps, format/parse, calendar projection.
+- `references/unsupported-locales.md` — shipping a locale `flutter_localizations` has no data for: the probe, the vendored delegate trio, delegate ordering, font coverage.
 
 Run `scripts/check_arb_parity.sh` and `scripts/check_i18n_bans.sh` before a PR.
 
@@ -48,7 +50,9 @@ Run `scripts/check_arb_parity.sh` and `scripts/check_i18n_bans.sh` before a PR.
 4. **Direction is a locale consequence, never hardcoded.** Wire `localizationsDelegates` +
    `supportedLocales` on `MaterialApp` and drive the active locale from state. A root
    `Directionality(TextDirection.rtl)` hides physical-side bugs and breaks LTR islands. RTL follows
-   the resolved locale via `GlobalWidgetsLocalizations` with zero per-widget code.
+   the resolved locale via `GlobalWidgetsLocalizations` with zero per-widget code — **but only for
+   locales `flutter_localizations` actually ships** (rule 10). For any other, direction silently
+   falls back to LTR. Assert `Directionality.of` per locale rather than assuming.
 5. **Directional-only geometry from the first commit.** Use `EdgeInsetsDirectional`,
    `AlignmentDirectional`, `PositionedDirectional`, `TextAlign.start/end`,
    `MainAxisAlignment.start/end`, `BorderRadiusDirectional`, `Icons.adaptive.*`. Never
@@ -66,7 +70,18 @@ Run `scripts/check_arb_parity.sh` and `scripts/check_i18n_bans.sh` before a PR.
    (`U+2066`–`U+2069`) reach storage, search, or export — strip at the boundary.
 9. **Bundle fonts that cover your scripts, with fallback; no runtime font fetch.** Set a theme
    `fontFamily` plus `fontFamilyFallback` so Arabic/Persian glyphs never tofu. Avoid `google_fonts`
-   in an offline/no-telemetry app — it fetches at runtime.
+   in an offline/no-telemetry app — it fetches at runtime. **Prove coverage from the font's own
+   `cmap`, not a specimen:** script coverage is not language coverage — a face that draws Persian
+   can be missing the seven letters Sorani adds, and a specimen set in Arabic never shows it.
+10. **A locale `flutter_localizations` does not ship needs three vendored delegates, ordered
+    first.** gen-l10n localizes *your* strings; Flutter's own chrome and the ambient `TextDirection`
+    come from a different catalog. Vendor `MaterialLocalizations`, `CupertinoLocalizations` **and**
+    `WidgetsLocalizations` borrowing a script neighbour, each claiming only that language code, and
+    place them ahead of the `Global*` delegates — which `AppLocalizations.localizationsDelegates`
+    already contains. WHY: the missing Material delegate asserts on the first `Tooltip`, and the
+    Widgets fallback claims *every* locale while hardcoding `TextDirection.ltr`, so fixing only the
+    Material half yields an RTL app that reads backwards and never crashes.
+    See `references/unsupported-locales.md`.
 
 ## The ARB workflow (add or translate a key)
 
@@ -219,6 +234,14 @@ plotted data itself never flips. Details in `custom-canvas-and-gestures`.
   mirroring (fails the grep).
 - Wrapping the app root in `Directionality(TextDirection.rtl)` to "turn on RTL" — RTL comes from the
   locale; a hardcoded root hides physical-side bugs and breaks LTR islands.
+- `[...AppLocalizations.localizationsDelegates, GlobalMaterialLocalizations.delegate, …]` — that
+  spread **already contains** the three `Global*` delegates, so re-appending them duplicates them
+  and puts them ahead of any delegate you vendor. `Localizations._loadAll` takes the first delegate
+  of a type that claims the locale; yours is never reached.
+- Vendoring only a `MaterialLocalizations` delegate for an unsupported locale — the crash goes away
+  and the app renders backwards instead. Vendor the `WidgetsLocalizations` one too, or neither.
+- Trusting "supports Arabic" on a foundry page for a Sorani, Urdu or Pashto build — assert the
+  language's own letters against the bundled face's `cmap`.
 - Letting isolate characters (`U+2066`–`U+2069`) reach storage/search/export — strip at the boundary.
 - Rendering RTL/numeral goldens with `Ahem` — Persian digits and Arabic-script shaping are never
   exercised. Load real bundled fonts (see `widget-golden-and-a11y-testing`).
@@ -243,7 +266,11 @@ plotted data itself never flips. Details in `custom-canvas-and-gestures`.
 - [ ] Dates/numbers stored canonical (UTC epoch + ASCII); calendars/numerals project only at render;
       reminders schedule off the epoch.
 - [ ] Fonts cover all shipped scripts with fallback; no runtime font fetch; RTL + numeral goldens run
-      on real fonts.
+      on real fonts. Coverage asserted from each bundled face's `cmap` — the language's own letters,
+      not just its script.
+- [ ] Every shipped locale is either in `flutter_localizations` or has all three delegates vendored
+      ahead of the `Global*` ones; `Directionality.of` and a `MaterialLocalizations` string are
+      asserted for each; platform manifests (`CFBundleLocalizations`) list every tag.
 
 ## Related skills
 
@@ -255,6 +282,10 @@ plotted data itself never flips. Details in `custom-canvas-and-gestures`.
 - See `local-notifications-scheduler` for scheduling off canonical instants, not calendar arithmetic.
 - See `widget-composition` for the directional layout primitives these strings sit inside.
 - See `scaffold-feature-module` for wiring a new feature's strings through this ARB workflow.
+- See `design-system-structure` (`references/typography-and-fonts.md`) for where the per-script
+  fallback cascade is declared and how bundled glyph coverage is proved.
+- See `app-startup-and-bootstrap` for restoring the persisted locale before the first frame — the
+  only way a locale the OS cannot select is ever reachable.
 
 ## References
 
@@ -266,3 +297,6 @@ plotted data itself never flips. Details in `custom-canvas-and-gestures`.
 - `intl` package (NumberFormat, DateFormat, Bidi): https://pub.dev/packages/intl
 - Unicode Bidi Algorithm (UAX #9), isolate controls: https://www.unicode.org/reports/tr9/
 - `Directionality`, `EdgeInsetsDirectional`: https://api.flutter.dev/flutter/widgets/Directionality-class.html
+- `LocalizationsDelegate` (vendoring one): https://api.flutter.dev/flutter/widgets/LocalizationsDelegate-class.html
+- Supported locale list + adding an unsupported one: https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization#advanced-locale-definition
+- OpenType `cmap` table (glyph coverage): https://learn.microsoft.com/en-us/typography/opentype/spec/cmap
