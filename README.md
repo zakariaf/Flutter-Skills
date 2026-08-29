@@ -111,7 +111,7 @@ Prefer a native integration? See [How to use these skills](#how-to-use-these-ski
 ### Internationalization & accessibility
 | Skill | What it governs |
 |---|---|
-| `i18n-rtl-l10n` **(rich)** | gen-l10n/ARB with key+placeholder parity, ICU plurals, `Directional`-only geometry, bidi isolation, canonical-store + localize-at-render, numeral normalize-before-parse. |
+| `i18n-rtl-l10n` **(rich)** | gen-l10n/ARB with key+placeholder parity, ICU plurals, `Directional`-only geometry, bidi isolation, canonical-store + localize-at-render, numeral normalize-before-parse, vendored delegates for a locale `flutter_localizations` lacks. |
 | `accessibility-as-code` | A11y as a correctness property: `Semantics` on every node, read a11y flags from `MediaQuery`, never clamp `textScaler`, never colour-alone, 44px targets. |
 
 ### Shipping & monetization
