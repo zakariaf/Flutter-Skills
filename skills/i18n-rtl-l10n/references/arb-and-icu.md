@@ -28,7 +28,7 @@ widget into an analyzer error.
 | `app_fr.arb` | French | LTR | |
 | `app_fa.arb` | Persian | RTL | Persian digits typical (Extended Arabic-Indic) |
 | `app_ar.arb` | Arabic | RTL | Six plural forms: zero/one/two/few/many/other |
-| `app_ckb.arb` | Sorani Kurdish | RTL | Not in built-in `GlobalMaterialLocalizations` — see below |
+| `app_ckb.arb` | Sorani Kurdish | RTL | **Not shipped by `flutter_localizations` at all** — needs vendored delegates, see `references/unsupported-locales.md` |
 
 Swap in whatever locales the app ships. The workflow is identical; only RTL locales trigger the
 directional discipline.
@@ -85,24 +85,25 @@ Quantities are stored canonically (integer minor units keyed to the ISO-4217 exp
 `value-objects-money-and-units`), never a float. Render the amount and the symbol/unit as separate
 isolated runs (or via `NumberFormat`'s currency pattern), never hand-glued into one placeholder.
 
-## Widget vendors a delegate for a non-built-in locale
-
-`flutter_localizations` ships `GlobalMaterialLocalizations` for many locales but not all (Sorani
-Kurdish `ckb`, for example). For such a locale, vendor a custom `LocalizationsDelegate` that borrows a
-close relative's Material/Cupertino/Widgets strings, and register it alongside the `Global*` delegates:
+## Wiring the delegates
 
 ```dart
 MaterialApp(
-  localizationsDelegates: const [
-    ...AppLocalizations.localizationsDelegates, // includes the vendored delegate
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,        // sets ambient RTL from the resolved locale
-    GlobalCupertinoLocalizations.delegate,
-  ],
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   locale: ref.watch(localeProvider), // null => follow the device
 );
 ```
+
+`AppLocalizations.localizationsDelegates` already contains the app's own delegate **and** the three
+`Global*` ones — gen-l10n emits them. Do not spread it and re-append the `Global*` delegates; that
+duplicates them and, worse, places them ahead of anything you add.
+
+**If a locale you ship is not one `flutter_localizations` supports** (`ckb` in the table above), this
+list is not enough: `MaterialLocalizations` is missing, so the first `Tooltip` asserts, and the
+ambient direction silently falls back to LTR whether or not the locale is RTL. That needs three
+vendored delegates ordered ahead of the built-ins — `references/unsupported-locales.md` owns the
+procedure, and `examples/unsupported_locale_delegates.dart` is the working code.
 
 ## Pitfalls
 
@@ -112,6 +113,8 @@ MaterialApp(
 - Hand-building "1 day" / "2 days" — use ICU `plural`.
 - Forgetting iOS `CFBundleLocalizations` for every locale — the locale is not offered on iOS even
   though Android works.
+- Assuming a locale works because your ARB is complete — Flutter's own chrome and the ambient text
+  direction come from a different catalog. Probe it (`references/unsupported-locales.md`).
 
 ## When multi-package (workspace)
 

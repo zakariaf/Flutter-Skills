@@ -66,6 +66,8 @@ const TextStyle(
 
 Three legal shapes: one face covers everything; a Latin display face + a broad-coverage fallback for other scripts; or a locale-switched family where metrics matter. Whichever you pick, the cascade is written down in the theme source — the one place a font-family string may appear — not held in someone's head. Bundle real weights; synthesized ("faux") bold mangles the joining strokes of cursive scripts. `i18n-rtl-l10n` owns numerals, calendars, and bidi isolation — don't re-implement them here.
 
+**Prove coverage from the font's own `cmap`, never from a foundry page or a specimen image.** Script coverage is not language coverage: a face marketed as "Arabic" can draw Persian flawlessly and still be missing the seven letters Sorani adds (ڕ ڵ ۆ ێ ھ ە ڤ), and a specimen set in Arabic will never show it. Parse the bundled asset's format-4 `cmap` subtable in a test and assert the codepoints each shipped locale actually needs — its letters, its digit block, its separators. The failure mode this catches is tofu on a device nobody checked, in a language nobody on the team reads. Recipe and codepoint tables: `i18n-rtl-l10n` → `references/unsupported-locales.md`.
+
 ## Numeral and metric details that bite
 
 - **Tabular figures** wherever numbers change or align in a column: `fontFeatures: [FontFeature.tabularFigures()]`, so digits don't jitter during a count or shift a total. Verify the face actually ships `tnum` for the digit block in use; many do not — measure-and-reserve if it doesn't.
