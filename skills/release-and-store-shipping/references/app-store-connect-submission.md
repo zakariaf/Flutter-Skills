@@ -42,7 +42,8 @@ The repo, the fastlane log, and your memory are all statements about intent. Rea
     **API** has rejected a hyphenated id (409: "only alphanumeric, underscores, periods") — so
     keep API-created ids hyphen-free even when the bundle id has one.
   - Required before an IAP can be *added* to a submission: reference name (≤ 64 chars), product
-    id, **display name 2–30 chars**, **description ≤ 45 chars**, an **App Review screenshot**,
+    id, **display name 2–30 chars**, **description ~45 chars** (documented max; longer has
+    been accepted in practice — treat it as the safe target), an **App Review screenshot**,
     plus price, availability and a **tax category**. Review notes cap at 4000 chars.
   - The review screenshot is JPG/PNG at any size valid for your app's platforms, must clearly
     show the item being offered, and once uploaded **can be replaced but never removed**.

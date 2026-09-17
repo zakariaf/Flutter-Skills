@@ -54,8 +54,11 @@ Two more upload facts worth knowing before they cost a build:
   appears usually means a reused build number (rule 2) — it ingests into nowhere and nothing
   tells you.
 - **Deprecation notices are warnings.** A minimum-deployment-target notice (`ITMS-90068`-class)
-  comes back on every upload and blocks nothing. Never chase one mid-submission: it costs another
-  build, upload and ingest wait for no review benefit. Schedule it as its own change.
+  comes back on every upload and blocks nothing. Never chase one **mid-review** — a build already
+  in review costs another build, upload and ingest wait for no review benefit. But when you
+  already need a new binary (recovering from a rejection, or before a first submission), fold it
+  in there: it is free at that moment and saves a future cycle. Raising a deployment target drops
+  the devices below it, so say so explicitly rather than treating it as housekeeping.
 - Setting `ITSAppUsesNonExemptEncryption` in `Info.plist` removes the export-compliance step from
   every future upload.
 
