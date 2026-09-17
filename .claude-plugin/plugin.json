@@ -2,7 +2,7 @@
   "name": "flutter",
   "displayName": "Flutter Skills",
   "description": "Best-of-breed general Flutter engineering skills — architecture, Riverpod 3.x state, testing, persistence, i18n/RTL, accessibility, performance, plus codegen/CI/migration runbooks — usable in any Flutter app.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": {
     "name": "Zakaria Fatahi"
   },
