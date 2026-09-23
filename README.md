@@ -22,8 +22,8 @@ Built on the [**Agent Skills**](https://agentskills.io) open standard, so the sa
 **Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf, Cline, OpenCode** and 70+ more — not
 only Claude Code.
 
-These skills were distilled from five production Flutter apps' private skill libraries (~120
-skills), merged into one best-of-breed set, reconciled to a single canonical stack, and
+These skills were distilled from more than ten production Flutter apps' private skill libraries
+(~120 skills), merged into one best-of-breed set, reconciled to a single canonical stack, and
 adversarially reviewed for API correctness — then extended with the shipping, monetization and
 determinism lessons from a multi-app studio that ships to the App Store. **Design-token specifics** (exact colours, radii,
 shadows, named design systems) and **app-domain skills** were intentionally left out — this is the
@@ -203,9 +203,10 @@ follow, and the checks to run before opening a PR.
 
 ## Provenance
 
-Distilled and merged from the skill libraries of five production Flutter apps, reconciled to one
-canonical stack, then adversarially reviewed for API correctness (Riverpod 3.x, Drift, gen-l10n,
-WCAG) and scrubbed of design-token and app-domain specifics so they apply to any Flutter app.
+Distilled and merged from the skill libraries of more than ten production Flutter apps, reconciled
+to one canonical stack, then adversarially reviewed for API correctness (Riverpod 3.x, Drift,
+gen-l10n, WCAG) and scrubbed of design-token and app-domain specifics so they apply to any Flutter
+app.
 
 ## License
 
